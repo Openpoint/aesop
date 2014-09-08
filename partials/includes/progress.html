@@ -1,0 +1,15 @@
+<div ng-show="placeholder[c_admin.subcontext].selectedFiles != null">
+	<div class="sel-file" ng-repeat="f in placeholder[c_admin.subcontext].selectedFiles" ng-show="placeholder[c_admin.subcontext].selectedFiles[$index]">
+		<div class='teaser'>
+			<img class='teaser' ng-show="placeholder[c_admin.subcontext].dataUrls[$index]" ng-src="{{placeholder[c_admin.subcontext].dataUrls[$index]}}" />
+		</div>
+		<div>
+			<button class="button" ng-click="start($index,acontext)" ng-show="placeholder[c_admin.subcontext].progress[$index] < 0">Start</button>
+			<button class="button" ng-click="abort($index)" ng-show="hasUploader($index) && placeholder[c_admin.subcontext].progress[$index] < 100">Abort</button>
+			<span>{{f.name}}</span>
+		</div>		
+		<div class="progress" ng-show="placeholder[c_admin.subcontext].progress[$index] >= 0">						
+			<div style="width:{{placeholder[c_admin.subcontext].progress[$index]}}%">{{placeholder[c_admin.subcontext].progress[$index]}}%</div>
+		</div>						
+	</div>
+</div>

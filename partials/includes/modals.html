@@ -1,0 +1,40 @@
+<div ng-if='modals.story'>
+	<div>
+		<h1>Are you sure you want to delete the story?</h1>
+		<div>This cannot be undone and will erase everything</div>
+	</div>
+	<div class='yesno'>
+		<a ng-click='del("story")'>YES</a><a ng-click='modal()'>NO</a>
+	</div>							
+</div>
+<div ng-if='modals.chap'>
+	<div>
+		<h1>Are you sure you want to delete the chapter?</h1>
+		<div>This cannot be undone and will erase everything in the chapter</div>
+	</div>
+	<div class='yesno'>
+		<a ng-click='del("chap")'>YES</a><a ng-click='modal()'>NO</a>
+	</div>							
+</div>
+<div ng-if='modals.page'>
+	<div>
+		<h1>Are you sure you want to delete this page?</h1>
+		<div>This cannot be undone</div>
+	</div>
+	<div class='yesno'>
+		<a ng-click='del("page")'>YES</a><a ng-click='modal()'>NO</a>
+	</div>							
+</div>
+<div ng-if='modals.login'>
+	<form novalidate name="loginf" ng-submit="login(usern,password)">
+		<div class="infield" ng-class="{required : loginf.usern.$error.required}">
+			<input id="username" type="textinput" ng-model="usern" name="usern" required />
+			<label ng-hide="loginf.usern.$viewValue">Username or Email:</label>
+		</div>
+		<div class="infield" ng-class="{required : loginf.password.$error.required}">
+			<input id="userpass" type="password" ng-model="password" name="password" required />
+			<label ng-hide="loginf.password.$viewValue">Password:</label>
+		</div>
+		<input type="submit" value="Login" ng-disabled="loginf.$invalid">
+	</form>
+</div>
