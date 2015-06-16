@@ -1,0 +1,27 @@
+# Logs
+logs
+*.log
+
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+scrap
+
+#Misc directories
+utils/youtube-dl
+utils/bvideo/*
+utils/fvideo/*
+utils/fimage/*
+utils/poster/*
+utils/foverlay/*
+utils/oaudio/*
+utils/timage/*
+utils/vidlib/*
+
+static/resources/bvideo/*
+static/resources/fvideo/*
+static/resources/fimage/*
+static/resources/poster/*
+static/resources/foverlay/*
+static/resources/oaudio/*
+static/resources/timage/*

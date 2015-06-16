@@ -1,7 +1,13 @@
 <?php
+
+$maxq=4; // The maximum jobs to run in parallel
+
+$cores=exec('nproc')*4; //The amount of cores to give to each media processing job
+$domainname='openpoint.ie';
+$sitename='Story maker';
+
 if(file_get_contents("php://input")){
-	$data = json_decode(file_get_contents("php://input"));
-	
+	$data = json_decode(file_get_contents("php://input"));		
 }else{
 	$data = new stdClass();
 	$data2 = $_POST;
@@ -10,12 +16,15 @@ if(file_get_contents("php://input")){
 		$data->$key = $value;
 	}
 }
+
+
+escape($data);
 //$data->username='michaeladmin';
 //$data->email='michael@piquant.ie';
 //$data->password='Me1th0b0b';
 
 
-$conn_string = "host=localhost port=5432 dbname=story user=website password=WebsiteatPostgres";
+$conn_string = "host=localhost port=5432 dbname=storydev user=michaeladmin password=Me1th0b0b";
 $dbh = pg_connect($conn_string);
 if (!$dbh) {
 	die("Error in connection: " . pg_last_error($dbh));
@@ -31,20 +40,81 @@ function escape($data_batch){
 	}
 }
 
-function dupecheck($filename,$filelocation){
-	$path = explode("/",$filelocation);
-	unset($path[count($path)-1]);
-	$path = implode("/", $path)."/";
-	function subcheck($checkfile,$checklocation,$i,$path,$origfile){
-		if(file_exists ($checklocation)){
-			$checkfile=explode(".",$origfile);
-			$newfile = $checkfile[0].'('.$i.').'.$checkfile[count($checkfile)-1];
-			$i++;			
-			return subcheck($newfile,$path.$newfile,$i,$path,$origfile);
-		}else{
-			return $checkfile;
+function commit($sql){
+	
+	global $dbh;
+	
+	$result = pg_query($dbh, $sql);
+	if (!$result) {				
+		echo json_encode(pg_last_error($dbh));
+		pg_close($dbh);
+	}
+}
+
+function errlog($message){
+	$log = dirname(__FILE__)."/../utils/error.log";
+	$fh = fopen($log, 'a') or die("can't open file");
+	fwrite($fh, $message."\n");
+	fclose($fh);	
+}
+
+//Queue processing
+function queue($cmd,$mess,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title){
+				
+	global $dbh;
+			
+	//submit the command to queue
+	$sql="INSERT INTO queue (time,command,status,sid,chid,pid,porder,corder,type,title) VALUES (current_timestamp,".pg_escape_literal($cmd).",'queued',".$p_sid.",".$p_chid.",".$p_pid.",".$p_porder.",".$p_corder.",'".$p_type."','".$title."')";
+
+	commit($sql);
+	qprocess();
+}
+
+function qprocess(){
+	
+	global $dbh,$cores,$maxq;
+	
+	$running=array();
+	$queued=array();
+
+	$sql="SELECT * FROM queue ORDER BY time ASC";
+	$result = pg_query($dbh, $sql);
+	$arr = pg_fetch_all($result);
+	
+	if(count($arr) > 0){
+		
+		foreach($arr as $item){	
+	
+			if($item['status']==='queued'){
+				array_push($queued,$item);
+			}else if($item['status']!=='complete'){
+				array_push($running,$item);
+			}
+		}
+		$slots=$maxq - count($running);
+		if(count($queued) > 0 && $slots > 0){
+			foreach($queued as $item){
+				if($slots > 0){
+					$slots--;
+					$cmd=$item['command'];
+					exec($cmd,$prid);
+					$sql="UPDATE queue SET  prid=".$prid[0].", status='running' WHERE qid=".$item['qid']*1;
+					commit($sql);
+				}else{
+					break;
+				}
+			}
+			
 		}
 	}
-	return subcheck($filename,$filelocation,1,$path,$filename);
+	pg_close($dbh);
+}
+//delete an item from the queue
+function delq(){
+	global $p_type,$p_sid,$p_chid,$p_pid;
+	
+	$sql="DELETE FROM queue WHERE type='".$p_type."' AND  sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid;
+	echo "\n".$sql."\n";
+	commit($sql);
 }
 ?>

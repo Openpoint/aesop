@@ -1,0 +1,24 @@
+{
+  "name": "Aesop",
+  "version": "0.0.0",
+  "description": "Front end multimedia website and editor",
+  "dependencies": {
+    "angular": "~1.3",
+    "angular-animate": "~1.3",
+    "angular-cookies": "~1.3",
+    "angular-route": "~1.3",
+    "ng-file-upload": "~4.2",
+    "jquery": "~1.11",
+    "jquery.mousewheel": "~3.1",
+    "jquery-mobile": "~1.4",
+    "imagesloaded": "~3.1",
+    "angular-moment": "~0.10"   
+  },
+  "main": "index.php",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Jonker",
+  "license": "GPL"
+}
