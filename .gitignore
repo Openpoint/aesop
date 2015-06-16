@@ -2,20 +2,7 @@ settings.php
 logs
 *.log
 !.gitignore
-
-# Dependency directory
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+utils/youtube-dl
 node_modules
 scrap
-
-#Misc directories
-utils/youtube-dl
-utils/bvideo/*
-utils/fvideo/*
-utils/fimage/*
-utils/poster/*
-utils/foverlay/*
-utils/oaudio/*
-utils/timage/*
-utils/vidlib/*
 
