@@ -1,10 +1,6 @@
 <?php
+require_once($_SERVER["DOCUMENT_ROOT"].'/settings.php');
 
-$maxq=4; // The maximum jobs to run in parallel
-
-$cores=exec('nproc')*4; //The amount of cores to give to each media processing job
-$domainname='openpoint.ie';
-$sitename='Story maker';
 
 if(file_get_contents("php://input")){
 	$data = json_decode(file_get_contents("php://input"));		
@@ -24,7 +20,7 @@ escape($data);
 //$data->password='Me1th0b0b';
 
 
-$conn_string = "host=localhost port=5432 dbname=storydev user=michaeladmin password=Me1th0b0b";
+$conn_string = "host=".$db->host." port=".$db->port." dbname=".$db->name." user=".$db->user." password=".$db->pass;
 $dbh = pg_connect($conn_string);
 if (!$dbh) {
 	die("Error in connection: " . pg_last_error($dbh));
@@ -32,6 +28,11 @@ if (!$dbh) {
 	//echo('including');
 	//include("install/install.php");
 }
+
+$sql="SELECT pname FROM settings";
+$result = pg_query($dbh, $sql);
+$arr = pg_fetch_all($result);
+$sitename=$arr[0]['pname'];
 
 function escape($data_batch){
 	foreach($data_batch as $key => $value){

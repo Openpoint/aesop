@@ -8,4 +8,4 @@ Pre ALPHA upload at moment - still busy building deployment strategy.
 Have a look at the demo: http://story.openpoint.ie
 
 Dependencies:
-mediainfo avconv youtube-dl imagemagick postfix
+mediainfo libav-tools youtube-dl imagemagick postfix
