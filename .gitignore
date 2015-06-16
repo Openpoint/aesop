@@ -1,6 +1,7 @@
-# Logs
+
 logs
 *.log
+!.gitignore
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
@@ -18,10 +19,3 @@ utils/oaudio/*
 utils/timage/*
 utils/vidlib/*
 
-static/resources/bvideo/*
-static/resources/fvideo/*
-static/resources/fimage/*
-static/resources/poster/*
-static/resources/foverlay/*
-static/resources/oaudio/*
-static/resources/timage/*
