@@ -13,20 +13,19 @@ if(file_get_contents("php://input")){
 	}
 }
 
-
-escape($data);
-//$data->username='michaeladmin';
-//$data->email='michael@piquant.ie';
-//$data->password='Me1th0b0b';
+if(isset($data)){
+	escape($data);
+}else{
+	$data=(object) array(
+		'method'=>null
+	);
+}
 
 
 $conn_string = "host=".$db->host." port=".$db->port." dbname=".$db->name." user=".$db->user." password=".$db->pass;
 $dbh = pg_connect($conn_string);
 if (!$dbh) {
 	die("Error in connection: " . pg_last_error($dbh));
-}else{
-	//echo('including');
-	//include("install/install.php");
 }
 
 $sql="SELECT pname FROM settings";
