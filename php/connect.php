@@ -2,7 +2,9 @@
 
 include('set.php');
 
-$cookie=json_decode($_COOKIE["auth"]);
+if(isset($_COOKIE["auth"]){
+	$cookie=json_decode($_COOKIE["auth"]);
+}
 if(isset($cookie->uid)){
 	include('auth.php');
 	$token=gettoken($cookie->uid);

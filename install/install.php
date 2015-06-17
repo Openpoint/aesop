@@ -1,15 +1,21 @@
 <?php
+
 if(!file_exists($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
 	die('<div class="container">Please copy '.$_SERVER["DOCUMENT_ROOT"].'/settings.php.temp to '.$_SERVER["DOCUMENT_ROOT"].'/settings.php and make it writable to start the installation</div>');
 }else{
 	if(!is_writable($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
 		die('<div class="container">Please make '.$_SERVER["DOCUMENT_ROOT"].'/settings.php writable and refresh the page to start the installation</div>');
 	}
-	include($_SERVER["DOCUMENT_ROOT"].'/settings.php');
-	if($db){
+	require($_SERVER["DOCUMENT_ROOT"].'/settings.php');
+	if(isset($installed)){
+		header('Location: /');
+		exit;		
+	}
+	if(isset($db)){
 		$conn_string = "host=".$db->host." port=".$db->port." dbname=".$db->name." user=".$db->user." password=".$db->pass;	
 		$dbh = pg_connect($conn_string);
 		$dbconn = true;
+		
 	}
 }
 if(isset($_POST['database'])) {
@@ -25,7 +31,7 @@ if(isset($_POST['database'])) {
 		$dbconn='fail';
 	}else{
 		$tofile="
-\$domainname=".$domainname.";\n
+\$domainname='".$domainname."';\n
 \$db=(object) array(
 	'name'=>'".$_POST['dbname']."',
 	'host'=>'".$_POST['dbloc']."',
@@ -35,13 +41,14 @@ if(isset($_POST['database'])) {
 ); \n
 ?>";
 		file_put_contents($_SERVER["DOCUMENT_ROOT"].'/settings.php',$tofile,FILE_APPEND);
-		$dbconn=true;
 		include('sql.php');
 		$result = pg_query($dbh, $sql);
 		if (!$result) {
 			die(json_encode(pg_last_error($dbh)));
 		}else{
-			header('Location:'.$_SERVER['PHP_SELF']);
+			sleep(5);
+			header('Location:'.$_SERVER['PHP_SELF']);			
+			exit;
 		}
 	}
 }
@@ -58,7 +65,7 @@ if(isset($_POST['superuser'])) {
 		file_put_contents($_SERVER["DOCUMENT_ROOT"].'/settings.php',$tofile);
 		include($_SERVER["DOCUMENT_ROOT"]."/php/auth.php");
 		$salt= uniqid(mt_rand(), true);
-		$hash = crypt($password,'$6$rounds=5000$'.$salt.'$');
+		$hash = crypt($_POST['upass1'],'$6$rounds=5000$'.$salt.'$');
 		$token=authtoken();
 		$sql = "INSERT INTO settings (pname) VALUES ('".$_POST['pname']."');INSERT INTO users (username,hash,salt,email,authtoken,role,verified) VALUES ('".$_POST['uname']."','".$hash."','".$salt."','".$_POST['umail']."','".$token."','admin','1') RETURNING id";
 		$result = pg_query($dbh, $sql);
@@ -67,6 +74,7 @@ if(isset($_POST['superuser'])) {
 		}else{
 			$arr = pg_fetch_all($result);
 			setcookie('user','{"uid":"'.$arr[0]['id'].'","authtoken":"'.$token.'","authorised":true,"role":"admin"}',0,'/');
+			sleep(5);
 			header('Location: /');
 			exit;
 		}
@@ -103,7 +111,7 @@ if(isset($_POST['superuser'])) {
 </head>
 
 <body class='container'>
-	<?php if(!$dbconn || $dbconn==='fail'){ ?>
+	<?php if(!isset($dbconn) || $dbconn==='fail'){ ?>
 	<h1>Database</h1>
 	<div>Aesop requires a Postgresql 9+ database</div>
 	<form id='database' name='database' method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -114,7 +122,7 @@ if(isset($_POST['superuser'])) {
 		<input type='text' value='' placeholder="database password" name="dbpass" required size='40' /><br>
 		<input type='submit' name="database" value='save' />
 	</form>
-	<?php }else if(!$passerr || $passerr==='nomatch'){ ?>
+	<?php }else if(!isset($passerr) || $passerr==='nomatch'){ ?>
 		<h1>Admin User</h1>
 		<div>Create the admin user</div>
 		<form id='database' name='superuser' method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -127,10 +135,10 @@ if(isset($_POST['superuser'])) {
 			<input type='submit' name="superuser" value='save' />
 		</form>		
 	<?php } 
-		if($dbconn==='fail'){
+		if(isset($dbconn) && $dbconn==='fail'){
 			echo "<div class='error'>The connection details are incorrect. Please try again.</div>";
 		}
-		if($passerr==='nomatch'){
+		if(isset($passerr) && $passerr==='nomatch'){
 			echo "<div class='error'>The passwords do not match. Please try again.</div>";
 		}
 	?>

@@ -7,7 +7,7 @@ if(file_get_contents("php://input")){
 }else{
 	$data = new stdClass();
 	$data2 = $_POST;
-	//$data2 = $_GET;
+	$data->method=null;
 	foreach($data2 as $key => $value){
 		$data->$key = $value;
 	}

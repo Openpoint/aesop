@@ -23,14 +23,14 @@
 			exit;	
 		}
 		include($_SERVER["DOCUMENT_ROOT"].'/settings.php');
-		if(!$installed){
+		if(!isset($installed)){
 			header('Location: install/install.php');
 			exit;			
 		}
 		if(is_writable($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
 			die('<div class="container">Please remove write permissions from '.$_SERVER["DOCUMENT_ROOT"].'/settings.php and reload the page</div>');	
 		}
-		if($_GET['method']==='setpass'){
+		if(isset($_GET['method']) && $_GET['method']==='setpass'){
 			setcookie('user','{"uid":"'.$_GET['uid'].'","authtoken":"'.$_GET['token'].'","method":"reset"}',0,'/');
 		} 
 	?>
