@@ -53,7 +53,7 @@ if($data->method === 'fileup'){
 	
 	//return a error if there was a problem with the file upload
 	if ($_FILES["file"]["error"] > 0) {
-		echo "Error: " . $_FILES["myFile"]["error"];		
+		echo "Error: " . $_FILES["file"]["error"];		
 	} else {
 		
 		//continue processing the file		
@@ -301,12 +301,35 @@ if($data->method === 'new_page'){
 		echo json_encode($return);	
 	}		
 }
+
 if($data->method === 'getall'){
 	
+	function return_bytes($val) {
+		$val = trim($val);
+		$last = strtolower($val[strlen($val)-1]);
+		switch($last) {
+			// The 'G' modifier is available since PHP 5.1.0
+			case 'g':
+				$val *= 1024;
+			case 'm':
+				$val *= 1024;
+			case 'k':
+				$val *= 1024;
+		}
+
+		return $val;
+	}
+		
 	global $p_sid,$dbh;
-	$maxsize = ini_get('post_max_size');
+	$maxsize1 = ini_get('post_max_size');
+	$maxsize2 = ini_get('upload_max_filesize');
 	$all=array();
-	$all['maxsize'] = $maxsize;
+	if(return_bytes($maxsize1) > return_bytes($maxsize2)){
+		$all['maxsize'] = $maxsize2;
+	}else{
+		$all['maxsize'] = $maxsize1;
+	}
+	
 	$sql = "SELECT * FROM story WHERE sid = ".$p_sid;
 	$result = pg_query($dbh, $sql);
 	if (!$result) {
