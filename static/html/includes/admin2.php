@@ -96,6 +96,8 @@
 					</div>
 				</div>
 			</div>
+			
 		</div>
+		<div class='closer' ng-click='c_admin.context=null'>X</div>
 	</div>
 </div>

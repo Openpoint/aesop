@@ -42,12 +42,12 @@
 						<div class='topmen'>
 							
 							<ul class='activities'>
-								<li ng-click="add('add',null)" ng-class="{'active' : c_admin.context=='add'}">Add</li>
+								<li ng-click="add('add',null)" ng-class="{'active' : c_admin.context=='add'}">NEW</li>
 								<li ng-click="add('resource',null)" ng-class="{'active' : c_admin.context=='resource'}" ng-if='all.a.story.sid'>Media</li>
 								<li ng-click="add('content',null)" ng-class="{'active' : c_admin.context=='content'}" ng-if='all.a.story.sid'>Text</li>
 								<li ng-click="add('order',null)" ng-class="{'active' : c_admin.context=='order'}" ng-if='all.a.story.sid'>Order</li>
 								<li ng-click="add('delete',null)" ng-class="{'active' : c_admin.context=='delete'}" ng-if='all.a.story.sid'>Delete</li>
-								<li ng-click="add('embed',null)" ng-class="{'active' : c_admin.context=='embed'}" ng-if='all.a.story.sid'>Embed</li>
+								<li ng-click="add('embed',null)" ng-class="{'active' : c_admin.context=='embed'}" ng-if='all.a.story.sid'>Embed Code</li>
 							</ul>
 							<ul class='user'>
 								<li class='message bubb' ng-if="c_admin.queue.running.length+c_admin.queue.queued.length > 0" ng-click="add('admin',null)">{{c_admin.queue.running.length+c_admin.queue.queued.length}}</li>

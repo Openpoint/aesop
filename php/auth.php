@@ -88,10 +88,6 @@ function gettoken() {
 }
 function mailuser($to,$subject,$message) {
 	global $domainname,$sitename,$uid,$token,$mess,$p_usermail;
-	$headers = '
-	From: noreply@'.$domainname." \r\n" .
-	'Reply-To: noreply@'.$domainname." \r\n" .
-	'X-Mailer: PHP/' . phpversion();
 
 	$headers   = array();
 	$headers[] = "MIME-Version: 1.0";
@@ -100,6 +96,7 @@ function mailuser($to,$subject,$message) {
 	$headers[] = "Reply-To: ".$sitename." <noreply@".$domainname.">";
 	$headers[] = "Subject: {$subject}";
 	$headers[] = "X-Mailer: PHP/".phpversion();
+
 
 	$message=$message.
 	'http://'.$_SERVER['HTTP_HOST']."?method=setpass&uid=".$uid."&token=".$token;

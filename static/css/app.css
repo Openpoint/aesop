@@ -168,6 +168,18 @@ border-left:1px solid black;
 position:relative;
 left:-1px;
 }
+#a2frame #notification{
+width:50%;
+}
+#a2frame .bubb{
+position:relative;
+}
+#a2frame .closer{
+position:absolute;
+top:20px;
+right:20px;
+left:auto;
+}
 #adminjobs {
 max-width:700px;
 }
@@ -180,6 +192,13 @@ padding-right:70px;
 #notification .bubb{
 padding:15px;
 margin-bottom:10px;
+}
+#notification .bubb:after, #notification .inner:after{
+content:'X';
+position:absolute;
+top:10px;
+right:10px;
+color:black;
 }
 .bubbrow{
 margin-bottom:10px;
@@ -217,11 +236,17 @@ position:relative;
 position:absolute;
 left:0;
 top:100%;
-padding:5px 10px;
+
 color:white;
 background:black;
 }
-
+#bookmark span{
+padding:10px;
+display:inline-block;
+}
+#bookmark .closer{
+background:black;
+}
 #panel{
 background:url('128-198.jpg');
 left:0;
@@ -693,7 +718,7 @@ cursor:pointer;
 color:#527489;
 cursor:default!important;
 }
-/* ---------------------------------------------------------------------------------front page */
+
 .container {
 width:1200px;
 position:relative;
@@ -701,7 +726,7 @@ margin: 0 auto;
 max-width:100%;
 }
 .fteaser {
-opacity:0;
+
 overflow:hidden;
 }
 .fouter{
@@ -742,6 +767,16 @@ text-transform:uppercase;
 font-weight:700;
 font-family: 'Lato', sans-serif;
 text-shadow: 2px 2px 2px black;
+}
+.closer{
+font-weight:bold;
+padding:5px 10px;
+font-size:2em;
+cursor:pointer;
+position:absolute;
+top:100%;
+left:0;
+
 }
 /* ---------------------------------------------------------------------------------infield labels css stylesheet */
 /*

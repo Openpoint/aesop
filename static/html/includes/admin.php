@@ -128,7 +128,7 @@
 				<div class='r_exist admin_subsection' ng-show="size(all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext]) > 0 && !all.a.resource[c.context.chid][c.context.pid].fcarry">
 					<h1>Delete this featured video?</h1>
 					<button ng-click="del_r(c_admin.subcontext,c.context.sid,c.context.pid,c.context.chid)">Delete</button>
-					<button ng-click='switcher("fvideo")'>Switch to background</button>										
+					<button ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_mp4!=='/static/resources/fvideo/loading.mp4'" ng-click='switcher("fvideo")'>Switch to background</button>										
 				</div>
 			</div>
 								
@@ -161,7 +161,10 @@
 				<div class='r_exist admin_subsection' ng-show="size(all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext]) > 0 && !all.a.resource[c.context.chid][c.context.pid].bcarry">
 					<h1>Delete this background video?</h1>
 					<button ng-click="del_r(c_admin.subcontext,c.context.sid,c.context.pid,c.context.chid)">Delete</button>
-					<button ng-if='!all.a.resource[c.context.chid][c.context.pid].oaudio && c.context.pid!==-2' ng-click='switcher("bvideo")'>Switch to featured</button>									
+					<button ng-if='
+					!all.a.resource[c.context.chid][c.context.pid].oaudio && c.context.pid!==-2 &&  
+					all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4!=="/static/resources/bvideo/loading.mp4"
+					' ng-click='switcher("bvideo")'>Switch to featured</button>									
 				</div>
 				<ul class='r_exist admin_subsection' ng-show="all.a.resource[c.context.chid][c.context.pid].bcarry">
 					<h1>Carried From Previous:</h1>
@@ -359,5 +362,13 @@
 			</textarea>
 		</div>
 	</div>
-	<div id='bookmark' ng-if="c_admin.context != 'home' && c_admin.context != 'admin'">{{all.a.resource[c.context.chid][c.context.pid].astop}}<br>{{all.a.resource[c.context.chid][c.context.pid].acarry}}<br>{{c.context}}</div>
+	<div id='bookmark' ng-if="c_admin.context != 'home' && c_admin.context != 'admin'">
+
+
+		<span ng-if="c.context.pid===-2">Story Home</span>
+		<span ng-if="c.context.pid==-1">Chapter {{c.context.c_order+1}} - Chapter Home</span>
+		<span ng-if="c.context.pid > 0">Chapter {{c.context.c_order+1}} - Page {{c.context.p_order+1}}</span>
+
+		<div class='closer' ng-click='c_admin.context=null'>X</div>
+	</div>
 

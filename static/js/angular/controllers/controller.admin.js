@@ -86,6 +86,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 						$location.url($location.path());
 					})
 				}
+				$scope.c.user=$scope.user.authorised;
 				$scope.c_admin.seenqueue();							
 				$scope.wsize();
 
