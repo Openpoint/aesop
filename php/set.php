@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"].'/settings.php');
+require_once('../settings.php');
 
 
 if(file_get_contents("php://input")){

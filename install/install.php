@@ -12,13 +12,20 @@ if(!file_exists($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
 		$dbconn = true;
 	}
 }
-if(isset($_POST['database'])) { 
+if(isset($_POST['database'])) {
+	//get the domain name for email invites 
+	$domainname=$_SERVER['HTTP_HOST'];
+	$domainname=explode('.',parse_url($domainname)['path']);
+	array_shift($domainname);
+	$domainname=implode(".",$domainname);
+	
 	$conn_string = "host=".$_POST['dbloc']." port=".$_POST['dbport']." dbname=".$_POST['dbname']." user=".$_POST['dbuser']." password=".$_POST['dbpass'];
 	$dbh = pg_connect($conn_string);
 	if (!$dbh) {
 		$dbconn='fail';
 	}else{
 		$tofile="
+\$domainname=".$domainname.";\n
 \$db=(object) array(
 	'name'=>'".$_POST['dbname']."',
 	'host'=>'".$_POST['dbloc']."',
