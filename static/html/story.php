@@ -1,5 +1,7 @@
 <div id='panel' ng-controller='panel' ng-style="{width:width,height:height}" ng-hide="c_admin.context === 'admin'">
-		<audio id="acontrols" ng-if="(size(all.a.resource[c.context.chid][c.context.pid].oaudio) > 0 && (all.a.resource[c.context.chid][c.context.pid].bvmute || all.a.resource[c.context.chid][c.context.pid].fimage.location)) || (size(all.a.resource[c.context.chid][c.context.pid].bvideo) > 0 && isTouch && !all.a.resource[c.context.chid][c.context.pid].bvmute)" controls loop>
+		<audio id="acontrols" ng-if="
+		(size(all.a.resource[c.context.chid][c.context.pid].oaudio) > 0 && all.a.resource[c.context.chid][c.context.pid].bvmute) || 
+		(size(all.a.resource[c.context.chid][c.context.pid].oaudio) > 0 && !all.a.resource[c.context.chid][c.context.pid].fvideo && !all.a.resource[c.context.chid][c.context.pid].bvideo)" controls loop>
 		<source ng-if="all.a.resource[c.context.chid][c.context.pid].oaudio.a_ogg" src="{{all.a.resource[c.context.chid][c.context.pid].oaudio.a_ogg}}" type="audio/ogg">
 		<source ng-if="all.a.resource[c.context.chid][c.context.pid].oaudio.a_mp3" src="{{all.a.resource[c.context.chid][c.context.pid].oaudio.a_mp3}}" type="audio/mpeg">
 

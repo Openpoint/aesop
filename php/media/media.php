@@ -49,7 +49,8 @@ function setfile(){
 			queue($cmd,null,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title);
 
 		}else{
-			echo 'not a video';
+			echo json_encode(makemess('warning','The file is not of a supported type. Please try again'));
+			return;
 		}
 	}		
 }
@@ -62,18 +63,20 @@ function viddl(){
 	$json=exec($sandbox."youtube-dl -j -4 ".$url,$ouput,$err);
 	if($err === 0){
 		$json=json_decode($json);
-							
+
+		if($json->vcodec==='none' && ($p_type==='bvideo'||$ptype==='fvideo')){
+			echo json_encode(makemess('warning',"The URL you entered does not have a downloadable video. Please try something else."));
+			return;
+		}				
 		$title=$dir.title($json->title);
-		echo $title;
 		$ttitle=title($json->title,true);
 		$ext=$json->ext;
 			
 		$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/php/media/media2.php --peg \''.$peg.'\' --url "'.$url.'" --command "viddl" --title "'.$title.'" --ttitle "'.$ttitle.'" --ext "'.$ext.'" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';		
 		loading();
-
 		queue($cmd,null,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title);
 	}else{
-		echo 'error in download from '.$url;
+		echo json_encode(makemess('warning','There was a problem downloading media from '.$url.'. Please check that this is a valid URL and try again'));
 		return;
 	}		
 }
@@ -103,6 +106,7 @@ function loading(){
 		";
 	}
 	commit($sql);
+	echo json_encode(makemess('success',"The media is being processed. This can take some time.\nVideo can take about 10 times the playtime of itself. Audio will be quicker."));
 }
 ?>
 

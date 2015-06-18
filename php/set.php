@@ -58,6 +58,15 @@ function errlog($message){
 	fclose($fh);	
 }
 
+//helper to construct a singleton return message
+function makemess($type,$mess){
+	$message=array();
+	$message[0]=(object) array(
+		'class'=>$type,
+		'message'=>$mess
+	);
+	return $message;
+}
 //Queue processing
 function queue($cmd,$mess,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title){
 				

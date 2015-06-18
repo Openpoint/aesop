@@ -37,7 +37,16 @@
 			</form>
 		</div>
 	</div>
-
+	<div id='admin_add' ng-show="c_admin.context === 'help'" class='adminbar slide_d'>
+		<div class='admin_section help'>
+			<div class='inner'>
+				<h1>Welcome to Aesop</h1>
+				<p>Aesop is structured by 'story', 'chapter' and 'page'.<br>The menu system works contextually to your current place in the story and presents only the options available for that place.</p>
+				<p>Media options are video, images and audio.<br>These work in varying combinations with each other. For example, if you have a background image or video, you will be able to add overlay audio and an overlay image.<br>If the background video is not muted, the option for overlay audio will disappear and if the video becomes a featured video, the option for an overlay image will disappear. Deleting the media for any particular place in the story will open up all available media options again.</p>
+				<p>From a 'chapter' level onwards, media will 'roll over' to the next page.<br>This means that when you add a new page to a chapter, it will have the same media content as the previous page until you override it. This way you can have different text per page overlaying the same media content.<br>The same principle holds true for overlay images and audio.</p>
+			</div>
+		</div>
+	</div>
 	<!-- Main menu edit a resource -->
 	<div id='admin_resource' ng-show="c_admin.context === 'resource'" class='adminbar slide_d' ng-controller="FileUp">
 		<ul class='r_type admin_section'>
@@ -59,7 +68,11 @@
 			" 
 			ng-click="add('resource','foverlay'); resetInputFile()">Feature Overlay</li>
 			<li ng-class="{'active' : c_admin.subcontext=='fvideo'}" ng-show="
-			!all.a.resource[c.context.chid][c.context.pid].foverlay.location && c.context.chid > -1 && (size(all.a.resource[c.context.chid][c.context.pid].fimage) == 0 || all.a.resource[c.context.chid][c.context.pid].fcarry) && (size(all.a.resource[c.context.chid][c.context.pid].bvideo) == 0 || all.a.resource[c.context.chid][c.context.pid].bcarry)
+			!all.a.resource[c.context.chid][c.context.pid].foverlay.location && 
+			!all.a.resource[c.context.chid][c.context.pid].oaudio &&
+			c.context.chid > -1 && 
+			(size(all.a.resource[c.context.chid][c.context.pid].fimage) == 0 || all.a.resource[c.context.chid][c.context.pid].fcarry) && 
+			(size(all.a.resource[c.context.chid][c.context.pid].bvideo) == 0 || all.a.resource[c.context.chid][c.context.pid].bcarry)
 			" ng-click="add('resource','fvideo'); resetInputFile()">Feature Video</li>
 			
 			<li ng-class="{'active' : c_admin.subcontext=='bvideo'}" ng-show="
@@ -241,16 +254,25 @@
 				
 			</div>							
 		</div>
+		<!-- Media help section -->
 		<div class='admin_section help'>
 			<div class='inner' ng-show="c_admin.subcontext=='fimage'">
-				<p>Upload a featured image of type:<br />.png, .jpg, .gif<br />Please ensure that the image is in landscape orientation</p>				
+				<p>Images in a landscape orientation give the best results</p>				
 			</div>
 			<div class='inner' ng-show="c_admin.subcontext=='foverlay'">
-				<p>Upload an overlay image of type:<br />.png<br />Please ensure that the image is the same size as the featured image or background video.<br>Please ensure that the image has a transparent background.</p>				
+				<p>Overlays are '.png' type image files with transparent backgrounds.<br>Please ensure that their proportions are similar to the media that they are overlaying.<br>The media gets cropped to best fit into the viewers device screen - so be careful of putting important information close to the edges.</p>				
 			</div>
 			<div class='inner' ng-show="c_admin.subcontext=='bvideo' || c_admin.subcontext=='fvideo'">
-				<p><strong>1) </strong>Upload a video poster of type:<br />.png, .jpg<br />Please ensure that the poster is the same dimensions as the video</p>
-				<p><strong>2) </strong>Upload a video in the following formats:<br />.ogv, .mp4, .webm</p>				
+				<p>You can upload a video file OR grab video from the internet</p>
+				<p>All popular video file formats will upload and be converted to appropriate formats.<br>Try to process uploaded videos into MP4 or WebM before uploading.<br>This will speed up processing.</p>
+				<p>To grab a video from the web (eg. Youtube or Vimeo):<br>- Copy the video URL from the address bar in your browser<br>- Paste it into the field and proceed.<br>Most popular video sources will work.</p>
+				<p>You can optionally specify at which time points you wish to 'slice' a video</p>			
+			</div>
+			<div class='inner' ng-show="c_admin.subcontext=='oaudio'">
+				<p>You can upload an audio file OR grab audio from the internet</p>
+				<p>All popular audio file formats will upload and be converted to appropriate formats.</p>
+				<p>To grab audio from the web (eg. Soundcloud, Youtube or Vimeo):<br>- Copy the URL from the address bar in your browser<br>- Paste it into the field and proceed.<br>Most popular audio or video sources will work.</p>
+				<p>You can optionally specify at which time points you wish to 'slice' the media</p>			
 			</div>
 			<p>Your webserver is restricted to a maximum upload size of: {{all.a.maxsize}}</p>
 		</div>
@@ -277,15 +299,15 @@
 		<form  class='admin_section' name='editchapter' ng-submit="edit('chapter',null,null, chapter_title, chapter_subtitle, chapter_mentitle, null, null, null)" ng-if="c.context.pid == -1">
 			<h1>Edit the chapter content</h1>
 			<div class='infield'>
-				<div class='label'>Title</div>							
+				<span class='label'>Title</span><span> (In the media frame only)</span><br>						
 				<input id ='chapter_title' type='textinput' ng-model='chapter_title' required /> 
 			</div>
 			<div class='infield'>
-				<span class='label'>Subtitle</span><span>(In the menu and main frame)</span><br>		
+				<span class='label'>Subtitle</span><span> (In the menu and media frame)</span><br>		
 				<input id ='chapter_subtitle'  type='textinput' ng-model='chapter_subtitle' required />
 			</div>	
 			<div class='infield'>
-				<span class='label'>Menu Title</span><span>  (Below the menu teaser image)</span><br>			
+				<span class='label'>Menu Sub-line</span><span>  (Below the menu teaser image)</span><br>			
 				<input type="textinput" id ='chapter_mentitle' ng-model='chapter_mentitle'> 
 			</div>		
 			<div><input type='submit' value='submit' ng-disabled="editchapter.$invalid"></div>
@@ -295,7 +317,7 @@
 		<form  class='admin_section' name='editpage' ng-submit="edit('page',null,null, null, null, null, page_title, page_text, page_menshow)" ng-if="c.context.pid > 0">
 			<h1>Edit the page content</h1>
 			<div class='infield' ng-show="page_title">
-				<input type="checkbox" name="menshow" ng-model="page_menshow"><span>  Show the title in the menu?</span>							
+				<input type="checkbox" name="menshow" ng-model="page_menshow"><span>  List this page in the menu?</span>							
 			</div>
 			<div class='infield'>
 				<div class='label'>Title</div>

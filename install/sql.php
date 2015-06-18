@@ -40,7 +40,7 @@ CREATE TABLE chapter (
     sid smallint,
     title text,
     c_order smallint,
-    subtitle text DEFAULT 'Please add a chapter subtitle'::text,
+    subtitle text DEFAULT 'Chapter subtitle'::text,
     mentitle text DEFAULT 'Menu Title'::text
 );
 
@@ -77,7 +77,7 @@ CREATE TABLE page (
     chid smallint,
     sid smallint,
     title text,
-    text text DEFAULT 'Please add some page text'::text,
+    text text DEFAULT 'Page text'::text,
     p_order smallint,
     menushow boolean DEFAULT true
 );
@@ -234,7 +234,7 @@ ALTER TABLE public.settings OWNER TO ".$_POST['dbuser'].";
 CREATE TABLE story (
     sid integer NOT NULL,
     title character varying(256),
-    text text DEFAULT 'Please add a story summary'::text,
+    text text DEFAULT 'Story summary'::text,
     location text
 );
 

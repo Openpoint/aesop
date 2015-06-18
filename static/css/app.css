@@ -619,6 +619,9 @@ font-size:1.2em;
 color:black;
 font-size:1em;
 }
+.help h1{
+color:white!important;
+}
 textarea {
 line-height:1.2em;
 }
@@ -776,7 +779,14 @@ cursor:pointer;
 position:absolute;
 top:100%;
 left:0;
-
+}
+.spinner{
+display:inline-block;
+width:16px;
+height:16px;
+background:url("spinner.gif");
+position:relative;
+top:3px;
 }
 /* ---------------------------------------------------------------------------------infield labels css stylesheet */
 /*

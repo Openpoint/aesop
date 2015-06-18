@@ -53,7 +53,7 @@ if($data->method === 'fileup'){
 	
 	//return a error if there was a problem with the file upload
 	if ($_FILES["file"]["error"] > 0) {
-		echo "Error: " . $_FILES["file"]["error"];		
+		echo json_encode(makemess('error','There was an unknown error with the file upload. Please advise your system admin.'));		
 	} else {
 		
 		//continue processing the file		
@@ -114,10 +114,10 @@ if($data->method === 'fileup'){
 				}
 				
 				commit($sql);
-				echo 'image saved';
+				echo json_encode(makemess('success','The image was saved'));
 				return;
 			}else{
-				print_r(error_get_last());
+				echo json_encode(makemess('error',print_r(error_get_last())));
 			}
 		}
 
@@ -167,12 +167,10 @@ if($data->method === 'delres'){
 		if($p_type==='fimage' || $p_type==='foverlay' || $p_type==='timage'){
 			foreach ($arr as $item){
 				$path = $context.$p_type.'/'.$item['location'];
-				echo $path."\n";
 				unlink($path);
 			}
 			if($p_type==='timage' && $p_pid==-2){
 				$sql="UPDATE story SET location = NULL WHERE sid = ".$p_sid;
-				echo $sql."\n";
 				commit($sql);
 			}			
 		}
@@ -222,7 +220,7 @@ if($data->method === 'new_story'){
 	}else{
 		$arr = pg_fetch_all($result);
 		$sid=$arr[0]['sid'];
-		$sql = "INSERT INTO chapter (sid,c_order,title) VALUES (".$sid.",0,'Please add a chapter title') RETURNING chid";
+		$sql = "INSERT INTO chapter (sid,c_order,title) VALUES (".$sid.",0,'Chapter title') RETURNING chid";
 		$result = pg_query($dbh, $sql);
 		if (!$result) {
 			$return = array(
@@ -232,7 +230,7 @@ if($data->method === 'new_story'){
 		}else{
 			$arr = pg_fetch_all($result);
 			$chid=$arr[0]['chid'];
-			$sql = "INSERT INTO page (sid,chid,p_order,title) VALUES (".$sid.",".$chid.",0,'Please add a page title') RETURNING chid";
+			$sql = "INSERT INTO page (sid,chid,p_order,title) VALUES (".$sid.",".$chid.",0,'Page title') RETURNING chid";
 			$result = pg_query($dbh, $sql);		
 			if (!$result) {
 				$return = array(
@@ -263,7 +261,7 @@ if($data->method === 'new_chapter'){
 	}else{
 		$arr = pg_fetch_all($result);
 		$chid=$arr[0]['chid'];
-		$sql = "INSERT INTO page (sid,chid,p_order,title) VALUES (".$p_sid.",".$chid.",0,'Please add a page title')";
+		$sql = "INSERT INTO page (sid,chid,p_order,title) VALUES (".$p_sid.",".$chid.",0,'Page title')";
 		$result = pg_query($dbh, $sql);		
 		if (!$result) {
 			$return = array(

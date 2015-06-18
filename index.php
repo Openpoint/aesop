@@ -43,6 +43,7 @@
 							
 							<ul class='activities'>
 								<li ng-click="add('add',null)" ng-class="{'active' : c_admin.context=='add'}">NEW</li>
+								<li ng-click="add('help',null)" ng-class="{'active' : c_admin.context=='help'}" ng-if='all.a.story.sid'>Help</li>
 								<li ng-click="add('resource',null)" ng-class="{'active' : c_admin.context=='resource'}" ng-if='all.a.story.sid'>Media</li>
 								<li ng-click="add('content',null)" ng-class="{'active' : c_admin.context=='content'}" ng-if='all.a.story.sid'>Text</li>
 								<li ng-click="add('order',null)" ng-class="{'active' : c_admin.context=='order'}" ng-if='all.a.story.sid'>Order</li>

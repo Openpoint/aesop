@@ -396,7 +396,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 	}
 
 	
-	//the message alert system - types are message, warning, error
+	//the message alert system - types are message, warning, error, success
 	$scope.notice=function(type,message){
 		console.log(message);
 		if (type === 'clear'){
@@ -412,7 +412,10 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			$scope.notification.message=message;
 		}
 	}
-	
+	//clear the messages on context change
+	$scope.$watch('c_admin.context',function(){
+		$scope.notification.message=null;
+	})
 	//helper to reset the video forms
 	$scope.c_admin.setvid=function(){
 		if(typeof $scope.placeholder[$scope.c_admin.subcontext] === 'undefined'){
@@ -472,7 +475,6 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				}else{
 					data[i].message=JSON.parse(data[i].message);
 					$scope.c_admin.queue.running.push(data[i]);
-					console.log(data[i].message);
 				}
 			}
 			if($scope.c_admin.queue.running.length > 0 || $scope.c_admin.queue.queued.length > 0){
@@ -558,7 +560,6 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 			//get the file mimetype
 			var mime=$files[0].type;
 			mime=mime.split('/');
-			console.log(mime);
 			$scope.placeholder[$scope.c_admin.subcontext]={};
 			
 			var thisfile=$scope.placeholder[$scope.c_admin.subcontext].selectedFiles=$files;
@@ -694,17 +695,19 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 		.error(function(err){
 				console.log(err);
 		})
-		.success(function(succ){
-			console.log(succ);
-			$scope.placeholder[$scope.c_admin.subcontext]={};
-			$scope.reload();
+		.success(function(data){
+			$scope.notification.message=data;			
+			if(data[0].class==='success'){
+				$scope.placeholder[$scope.c_admin.subcontext]={};
+				$scope.reload();
+			}
 
 		})
 		.xhr(function(xhr){
-			console.log(xhr);
-			xhr.addEventListener('onloadend',function(){
-				console.log(xhr);
-			})
+			//console.log(xhr);
+			//xhr.addEventListener('onloadend',function(){
+				//console.log(xhr);
+			//})
 				
 		});
 

@@ -1,5 +1,5 @@
 <div id='admin2' class='admin' ng-controller='admin2' ng-style="{width:width}" ng-if="c_admin.context === 'admin'">
-
+	<!--side menu -->
 	<div id='a2con'>
 		<div>
 			<div class='sidemen first' ng-click="add('admin','jobs')" ng-class="{'active' : c_admin.subcontext=='jobs'}">Jobs</div>
@@ -7,16 +7,19 @@
 			<div class='sidemen' ng-click="add('admin','settings')" ng-class="{'active' : c_admin.subcontext=='settings'}">Settings</div>
 		</div>
 	</div>
+	<!--content frame -->
 	<div id='a2frame' ng-style="{width:width-200,height:height}">
+		<!--notifications -->
 		<div id='notification' ng-if='size(notification.message) > 0 && !modal.show_modal' ng-click='notice("clear")'>
 			<div ng-repeat="mes in notification.message" ng-class="mes.class" class='bubb'>
 				{{mes.message}}
 			</div>					
 		</div>
+		<!--users -->
 		<div id='adminusers' ng-if='c_admin.subcontext==="users"' ng-controller='adminusers'>
 			
 			<form name='adduser' ng-submit="newuser()" novalidate>
-				<h1>Create a new user</h1>
+				<h1>Invite a new user</h1>
 				<div  class='infield'>
 					<input id='newuser' type='text' ng-model="newusername" size='38' required />
 					<label for="newuser" ng-if="!newusername" >New user name</label>
@@ -26,7 +29,7 @@
 				</div>
 				<textarea ng-model="mailmessage" placeholder="Personalised message (optional)"></textarea>
 				<div>
-					<input type='submit' value='create' ng-disabled="adduser.$invalid" />
+					<input type='submit' value='invite' ng-disabled="adduser.$invalid" />
 				</div>
 			</form>
 			<h1>Existing Users</h1>
@@ -34,6 +37,7 @@
 				{{user.username}} {{user.role}}<span ng-if='user.verified==="f"'> Unverified</span>
 			</div>
 		</div>
+		<!--job queue -->
 		<div id='adminjobs' ng-if='c_admin.subcontext==="jobs"'>
 			<h1 ng-if='
 			c_admin.queue.running.length===0 && 
@@ -41,6 +45,7 @@
 			c_admin.queue.error.length===0 && 
 			c_admin.queue.complete.length===0
 			'>There are no active jobs.</h1>
+			<!--running -->
 			<div ng-if='c_admin.queue.running.length > 0'>
 				<h1>Jobs that are runnng:</h1>
 				<div class='bubb message' ng-repeat="item in c_admin.queue.running">
@@ -52,10 +57,11 @@
 					<div>{{item.type | jobtype}} : Chapter {{item.corder*1+1}}, Page {{item.porder*1+1}}</div>
 					<div>{{item.title}}</div><br>						
 					<div>Started: <span am-time-ago="item.time"></span></div>
-					<div ng-repeat="mess in item.message">- {{mess}}</div>
+					<div ng-repeat="mess in item.message">- {{mess}} <span ng-class="{'spinner': $last}"></span></div>
 					
 				</div>
 			</div>
+			<!--queued -->
 			<div ng-if='c_admin.queue.queued.length > 0'>
 				<h1>Jobs that are queued:</h1>
 				<div class='bubb warning' ng-repeat="item in c_admin.queue.queued">
@@ -68,6 +74,7 @@
 					<div>{{item.title}}</div>
 				</div>
 			</div>
+			<!--error -->
 			<div ng-if='c_admin.queue.error.length > 0'>
 				<h1>Jobs with errors:</h1>
 				<div class='bubb error' ng-repeat="item in c_admin.queue.error">
@@ -81,6 +88,7 @@
 					<div ng-repeat="mess in item.message">- {{mess}}</div>
 				</div>
 			</div>
+			<!--complete -->
 			<div ng-if='c_admin.queue.complete.length > 0'>
 				<h1>Completed jobs:</h1>
 				<div class='bubb success'>
