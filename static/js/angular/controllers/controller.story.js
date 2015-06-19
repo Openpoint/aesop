@@ -60,10 +60,9 @@ Asp.page.story.controller('panel', ['$scope','$sce','$timeout','video',function(
 						Asp.media.bvideo = $('#mediafocus .bvideo')[0];	
 						if($scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].bvmute){
 							Asp.media.bvideo.muted=true;
+							
 						}else if(!$scope.muted){
 							Asp.media.bvideo.muted=false;
-						}else{
-							Asp.media.bvideo.muted=true;
 						}							
 						Asp.media.bvposter=$scope.lib+"poster/"+$scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].poster.location;							
 						if($("#media .pimage")[0].complete){
