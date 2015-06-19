@@ -294,7 +294,7 @@ bottom:100px;
 #textframe.story p{
 margin-bottom:0;
 }
-#textframe.story h1{
+#textframe.story h1, #textframe.chapter h1{
 font-size:2em;
 }
 
