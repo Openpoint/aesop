@@ -12,8 +12,13 @@ Asp.page.story.animation('.animate', function() {
 		if($('#mediafocus .bvideo').length > 0){		
 			Asp.media.bvideo.poster=Asp.media.bvposter;			
 			Asp.media.bvideo.load();
-			
+			console.log($('#acontrols')[0]);
 			Asp.media.bvideo.controls=true;
+			if(!Asp.media.muted && !$('#acontrols')[0]){
+				Asp.media.bvideo.muted=false;
+			}else{
+				Asp.media.bvideo.muted=true;
+			}
 			Asp.media.bvideo.play();
 			Asp.media.bvideo.controls=false;		
 		}
