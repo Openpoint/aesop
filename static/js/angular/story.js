@@ -23,17 +23,9 @@ Asp.page.story=angular.module('story', [])
 			}
 		});
 	}
-	if(page.request=='embedded'){ //log user out if story is being accessed through an iframe embed		
-		if($scope.user.authorised){
-			console.log($scope.user);	
-			$scope.logout();
-		}
+	if(page.request=='embedded'){ //log user out if story is being accessed through an iframe embed
 		$scope.locate.embedded=true;
-		setTimeout(function(){
-			if(!$scope.$$phase){
-				$scope.$apply();
-			}			
-		},10)
+		$scope.c.logout();
 	}
 	
 	
@@ -171,7 +163,7 @@ Asp.page.story=angular.module('story', [])
 						$scope.c.iready=true; //remove the loading overlay
 							
 						//----------- have a look at the 'all' object to understand the data structure and syntax ----------//
-						console.log($scope.all.a);
+						//console.log($scope.all.a);
 							
 
 							

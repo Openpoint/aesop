@@ -24,7 +24,6 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				},10)
 			}else{
 				$timeout(function(){
-					console.log('login');
 					$scope.c_admin.getqueue();
 					$scope.wsize();
 					return null;
@@ -44,14 +43,15 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 	}
 	
 	//logout
-	$scope.logout = function(){
-		$cookieStore.remove('user');
-		$scope.user={};
-		$scope.c_admin.context=null;
+	$scope.c.logout = function(){
 		$timeout(function(){
-			console.log('logout');
-			
-			$scope.wsize();
+			if($scope.user.authorised){
+				$cookieStore.remove('user');
+				$scope.user={};
+				$scope.c_admin.context=null;						
+				$scope.wsize();
+				
+			}
 		});
 	}
 	//reset a password from url token
