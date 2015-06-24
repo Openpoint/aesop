@@ -2,7 +2,6 @@
 
 // controller for the admin menu
 Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','setter','getter','modal','auth',function($scope,$cookieStore,$timeout,$location,setter,getter,modal,auth) {
-	
 	$scope.modal=modal;
 	
 	$scope.placeholder={
@@ -24,7 +23,9 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				},10)
 			}else{
 				$timeout(function(){
-					$scope.c_admin.getqueue();
+					if(!$scope.locate.embedded){
+						$scope.c_admin.getqueue();
+					}
 					$scope.wsize();
 					return null;
 				},10);
@@ -45,13 +46,13 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 	//logout
 	$scope.c.logout = function(){
 		$timeout(function(){
-			if($scope.user.authorised){
+			//if(typeof $scope.user!=='undefined' && $scope.user.authorised){
 				$cookieStore.remove('user');
 				$scope.user={};
 				$scope.c_admin.context=null;						
 				$scope.wsize();
 				
-			}
+			//}
 		});
 	}
 	//reset a password from url token

@@ -25,6 +25,7 @@ Asp.page.story=angular.module('story', [])
 	}
 	if(page.request=='embedded'){ //log user out if story is being accessed through an iframe embed
 		$scope.locate.embedded=true;
+		
 		$scope.c.logout();
 	}
 	

@@ -373,13 +373,13 @@
 		<div class='admin_section'>
 			<h1>Embed a small widget</h1>
 			<textarea style="height:auto;">
-<script>var aesop={};aesop.sauce = "http://{{locate.root}}{{locate.path}}?story={{all.a.story.title}}&request=embedded";aesop.isauce="http://{{locate.root}}/static/resources/timage/{{all.a.story.location}}";aesop.title="{{all.a.story.title}}";aesop.loader="url(http://{{locate.root}}/static/css/loader.gif)";aesop.size="small";</script><script src="http://{{locate.root}}/static/js/embed.js"></script><div id="aesop_widget"></div>
+<script>var aesop={};aesop.sauce = "http://{{locate.root}}/story?story={{all.a.story.title}}&request=embedded";aesop.isauce="http://{{locate.root}}/static/resources/timage/{{all.a.story.location}}";aesop.title="{{all.a.story.title}}";aesop.loader="url(http://{{locate.root}}/static/css/loader.gif)";aesop.size="small";</script><script src="http://{{locate.root}}/static/js/embed.js"></script><div id="aesop_widget"></div>
 			</textarea>
 		</div>
 		<div class='admin_section'>
 			<h1>Embed a big widget</h1>
 			<textarea style="height:auto;">
-<script>var aesop={};aesop.sauce = "http://{{locate.root}}{{locate.path}}?story={{all.a.story.title}}&request=embedded";aesop.isauce="http://{{locate.root}}/static/resources/timage/{{all.a.story.location}}";aesop.title="{{all.a.story.title}}";aesop.summary="{{all.a.story.text}}";aesop.loader="url(http://{{locate.root}}/static/css/loader.gif)";aesop.size="big";</script><script src="http://{{locate.root}}/static/js/embed.js"></script><div id="aesop_widget"></div>
+<script>var aesop={};aesop.sauce = "http://{{locate.root}}/story?story={{all.a.story.title}}&request=embedded";aesop.isauce="http://{{locate.root}}/static/resources/timage/{{all.a.story.location}}";aesop.title="{{all.a.story.title}}";aesop.summary="{{all.a.story.text}}";aesop.loader="url(http://{{locate.root}}/static/css/loader.gif)";aesop.size="big";</script><script src="http://{{locate.root}}/static/js/embed.js"></script><div id="aesop_widget"></div>
 			</textarea>
 		</div>
 	</div>

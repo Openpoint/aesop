@@ -23,6 +23,7 @@ var Aesop=angular.module('Aesop', [
 		redirectTo: '/home'
 	})
 	.when('/story', {
+		
 		templateUrl: '/static/html/story.php',
 		controller:'story'
 	})

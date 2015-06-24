@@ -4,13 +4,23 @@ aesop.load=function(){
 		
 	if(document.getElementById("aesop_widget")){
 		clearTimeout(i);
+		
 		aesop.w=document.getElementById("aesop_widget");
-		if(aesop.size==='big'){
-			aesop.w.style="position:relative;width:940px;height:528px;font-family:Helvetica,Sans-serif;overflow:hidden;cursor:pointer";
-			aesop.w.innerHTML=aesop.biginnards;
-		}else{
-			aesop.w.style="position:relative;width:300px;height:160px;font-family:Helvetica,Sans-serif;overflow:hidden;cursor:pointer";
+		aesop.w.style.position='relative';
+		aesop.w.style.fontFamily='Helvetica,Sans-serif';
+		aesop.w.style.overflow='hidden';
+		aesop.w.style.cursor='pointer';
+		if(aesop.size==='big'){			
+			aesop.w.innerHTML=aesop.biginnards;			
+
+			aesop.w.style.width='940px';
+			aesop.w.style.height='528px';			
+		}else{			
 			aesop.w.innerHTML=aesop.smallinnards;
+			
+			aesop.w.style.width='300px';
+			aesop.w.style.height='160px';
+
 		}
 		aesop.w.onclick=function(){aesop.open()};
 		
@@ -80,15 +90,6 @@ aesop.open=function(){
 	aesop.state='open';
 	aesop.in.style.display='none';
 	aesop.n.style.display='block';
-	/*
-	if(aesop.winw/aesop.winh < aesop.rat){
-		aesop.i.style.height='100%';
-		aesop.i.style.width='auto';
-	}else{
-		aesop.i.style.width='100%';
-		aesop.i.style.height='auto';			
-	}
-	*/
 	var r=aesop.ww;
 	
 	if((aesop.winw-aesop.ww)>(aesop.winh-aesop.wh)){
