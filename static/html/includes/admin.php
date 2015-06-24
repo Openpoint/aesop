@@ -67,10 +67,12 @@
 			&& (size(all.a.resource[c.context.chid][c.context.pid].bvideo) > 0 || all.a.resource[c.context.chid][c.context.pid].fimage.location);			
 			" 
 			ng-click="add('resource','foverlay'); resetInputFile()">Feature Overlay</li>
+			
 			<li ng-class="{'active' : c_admin.subcontext=='fvideo'}" ng-show="
 			!all.a.resource[c.context.chid][c.context.pid].foverlay.location && 
 			!all.a.resource[c.context.chid][c.context.pid].oaudio &&
 			c.context.chid > -1 && 
+			c.context.pid !==-1 &&
 			(size(all.a.resource[c.context.chid][c.context.pid].fimage) == 0 || all.a.resource[c.context.chid][c.context.pid].fcarry) && 
 			(size(all.a.resource[c.context.chid][c.context.pid].bvideo) == 0 || all.a.resource[c.context.chid][c.context.pid].bcarry)
 			" ng-click="add('resource','fvideo'); resetInputFile()">Feature Video</li>
@@ -117,7 +119,7 @@
 				</div>
 				<ul class='r_exist admin_subsection' ng-show="size(all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext]) > 0">
 					<h1>Remove the overlay image:</h1>
-					<li ng-click="del_r(c_admin.subcontext,all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext].location,null,c.context.pid,c.context.chid)" ng-show="all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext].location">{{all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext].location}}</li>
+					<button ng-click="del_r(c_admin.subcontext,c.context.sid,c.context.pid,c.context.chid)">Delete</button>	
 				</ul>
 			</div>	
 														
@@ -125,7 +127,7 @@
 			<div class='fvideo' ng-if="c_admin.subcontext=='fvideo'">
 
 				<div class='admin_subsection' ng-hide="size(all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext]) > 0">					
-					<div ng-show="!all.a.resource[c.context.chid][c.context.pid].fcarry">
+					<div>
 						<h1>Add a featured video</h1>
 						<div class='infield' ng-hide="placeholder[c_admin.subcontext].selectedFiles.length > 0">														
 							<input class='bvideourl' id="fvideourl" ng-model='placeholder[c_admin.subcontext].vidi.vurl' type="text" size="40">
@@ -138,7 +140,7 @@
 					</div>
 					<?php include("progress.html"); ?>
 				</div>
-				<div class='r_exist admin_subsection' ng-show="size(all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext]) > 0 && !all.a.resource[c.context.chid][c.context.pid].fcarry">
+				<div class='r_exist admin_subsection' ng-show="size(all.a.resource[c.context.chid][c.context.pid][c_admin.subcontext]) > 0">
 					<h1>Delete this featured video?</h1>
 					<button ng-click="del_r(c_admin.subcontext,c.context.sid,c.context.pid,c.context.chid)">Delete</button>
 					<button ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_mp4!=='/static/resources/fvideo/loading.mp4'" ng-click='switcher("fvideo")'>Switch to background</button>										
@@ -175,8 +177,10 @@
 					<h1>Delete this background video?</h1>
 					<button ng-click="del_r(c_admin.subcontext,c.context.sid,c.context.pid,c.context.chid)">Delete</button>
 					<button ng-if='
-					!all.a.resource[c.context.chid][c.context.pid].oaudio && c.context.pid!==-2 &&  
-					all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4!=="/static/resources/bvideo/loading.mp4"
+						!all.a.resource[c.context.chid][c.context.pid].oaudio && 
+						c.context.pid > 0 &&  
+						all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4!=="/static/resources/bvideo/loading.mp4 &&
+					"
 					' ng-click='switcher("bvideo")'>Switch to featured</button>									
 				</div>
 				<ul class='r_exist admin_subsection' ng-show="all.a.resource[c.context.chid][c.context.pid].bcarry">
@@ -385,7 +389,6 @@
 		</div>
 	</div>
 	<div id='bookmark' ng-if="c_admin.context != 'home' && c_admin.context != 'admin'">
-
 
 		<span ng-if="c.context.pid===-2">Story Home</span>
 		<span ng-if="c.context.pid==-1">Chapter {{c.context.c_order+1}} - Chapter Home</span>

@@ -92,9 +92,9 @@ function mailuser($to,$subject,$message) {
 	$headers   = array();
 	$headers[] = "MIME-Version: 1.0";
 	$headers[] = "Content-type: text/plain; charset=iso-8859-1";
-	$headers[] = "From: ".$sitename." <noreply@".$domainname.">";
-	$headers[] = "Reply-To: ".$sitename." <noreply@".$domainname.">";
-	$headers[] = "Subject: {$subject}";
+	$headers[] = "From: ".$sitename." <accounts@".$domainname.">";
+	$headers[] = "Reply-To: ".$sitename." <accounts@".$domainname.">";
+	$headers[] = "Subject: ".$subject;
 	$headers[] = "X-Mailer: PHP/".phpversion();
 
 

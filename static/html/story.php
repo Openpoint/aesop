@@ -42,7 +42,7 @@
 	<div id="mediafocus" ng-style="style.css" >
 		<div class='inner'>
 			<img class='overlay' ng-style="{width:style.awidth,height:style.aheight}" ng-if="all.a.resource[c.context.chid][c.context.pid].foverlay.location" ng-src="{{lib}}foverlay/{{all.a.resource[c.context.chid][c.context.pid].foverlay.location}}" />
-			<video class="bvideo" ng-style="{width:style.awidth,height:style.aheight}" ng-if="size(all.a.resource[c.context.chid][c.context.pid].bvideo) > 0" loop  preload='auto' muted='{{all.a.resource[c.context.chid][c.context.pid].bvmute}}'>
+			<video class="bvideo" ng-style="{width:style.awidth,height:style.aheight}" ng-if="size(all.a.resource[c.context.chid][c.context.pid].bvideo) > 0" loop  preload='auto'>
 				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm && !isTouch" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm}}" type="video/webm">
 				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4 && !isTouch" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4}}" type="video/mp4">
 				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv && !isTouch" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv}}" type="video/ogg">
