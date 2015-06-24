@@ -63,7 +63,6 @@ function viddl(){
 	$json=exec($sandbox."youtube-dl -j -4 ".$url,$ouput,$err);
 	if($err === 0){
 		$json=json_decode($json);
-
 		if($json->vcodec==='none' && ($p_type==='bvideo'||$ptype==='fvideo')){
 			echo json_encode(makemess('warning',"The URL you entered does not have a downloadable video. Please try something else."));
 			return;

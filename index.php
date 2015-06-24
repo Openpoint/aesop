@@ -55,7 +55,7 @@
 								<li class='success bubb' ng-if="c_admin.queue.complete.length > 0" ng-click="reload()">{{c_admin.queue.complete.length}}</li>
 								<li class='error bubb' ng-if="c_admin.queue.error.length > 0"  ng-click="add('admin',null)">{{c_admin.queue.error.length}}</li>
 								<li ng-click="add('admin',null)">Admin</li>
-								<li ng-click="logout()">Logout</li>
+								<li ng-click="c.logout()">Logout</li>
 							</ul>
 							<div class='clearfix'></div>
 						</div>

@@ -62,8 +62,7 @@ if($data->method === 'fileup'){
 			$p_vidi=json_decode($p_vidi);
 			if(!$p_vidi->vurl){
 				$vtemp=$_FILES["file"];
-			}
-			
+			}			
 			include('media/media.php');
 			return;
 		} 
@@ -89,17 +88,18 @@ if($data->method === 'fileup'){
 				$cmd='chmod 774 '.$source;
 				exec($cmd);				
 				if($p_type==='timage'){
-					$cmd='convert '.$source.' -resize 960 -quality 80 '.$target;
+					$cmd='convert "'.$source.'" -resize 960 -quality 80 '.$target;
+
 					exec($cmd);
 					
 				}
 				if($p_type==='fimage' || $p_type==='foverlay'){
-					$cmd='convert '.$source.' -ping -format %w info:';
+					$cmd='convert "'.$source.'" -ping -format %w info:';
 					$width=exec($cmd);
 					if($width > 1920){
-						$cmd='convert '.$source.' -resize 1920 -quality 80 '.$target;
+						$cmd='convert "'.$source.'" -resize 1920 -quality 80 '.$target;
 					}else{
-						$cmd='convert -quality 80 '.$source.' '.$target;
+						$cmd='convert -quality 80 "'.$source.'" '.$target;
 					}
 					$cmd=$cmd.';rm -r '.$sandbox.$p_type.'/'.$dir;
 					exec($cmd);

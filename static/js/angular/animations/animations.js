@@ -84,10 +84,12 @@ Asp.page.story.animation('.animate', function() {
 /*----------------------- Front Page ---------------------------------------------------*/
 Asp.page.home.animation('.fteaserwrap', function() {
 	var teaser = function(element, className, done){
-		$('.fteaser').height($('.fteaser').width()*.56);
+		var theight=$('.fteaser').height($('.fteaser').width()*.56).height();
 		$('.fteaser img').each(function(){
 			$(this).on('load',function(){
 				$(this).parents('.fteaser').animate({opacity:1});
+				this.style.position='relative';
+				this.style.top=(theight-this.height)/2+'px';
 			})		
 		})
 	}
