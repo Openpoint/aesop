@@ -29,8 +29,7 @@ Apache2 virtualhost config to include:
 ```
 Clone, cd into app directory and set permissions:
 ```bash
-sudo chown -R www-data:www-data utils
-sudo chown -R www-data:www-data static/resources
+sudo chown -R www-data:www-data utils static/resources log/aesop.log
 ```
 
 Spin it up in a web browser and follow the install insructions
