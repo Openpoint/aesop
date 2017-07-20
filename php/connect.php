@@ -1,6 +1,13 @@
 <?php
+ini_set("log_errors", 1);
+ini_set("error_log", $_SERVER["DOCUMENT_ROOT"]."/log/aesop.log");
 
-include('set.php');
+
+include_once('set.php');
+if($data->method === 'fileup'){
+	error_log('connect.php');
+	error_log(print_r($data,true));
+}
 
 if(isset($_COOKIE["auth"])){
 	$cookie=json_decode($_COOKIE["auth"]);
@@ -21,27 +28,28 @@ $mtypes=['bvideo','fvideo','fimage','foverlay','oaudio','poster','timage'];
 
 //helper to sanitize titles
 function title($tit,$notime){
-		
-	global $starttime, $endtime;		
+
+	global $starttime, $endtime;
 	$title = str_replace(' ','-',$tit);
 	$title = preg_replace('/[^A-Za-z0-9\-]/', '', $title);
-	if(!$notime){	
+	if(!$notime){
 		return $title.'_'.$starttime.'_'.$endtime;
 	}else{
 		return $title;
-	}	
+	}
 }
 
 //Process file uploads
+
 if($data->method === 'fileup'){
 
-	global $dbh, $p_type, $p_sid, $p_pid, $p_chid, $p_vidi, $vtemp, $context, $dir;
-	
+	global $dbh, $p_type, $p_sid, $p_pid, $p_chid, $vtemp, $context, $dir;
+
 	$dir=$p_sid.'/'.$p_chid.'/'.$p_pid.'/'; //create the path for data store file uploads
 	$cmd='mkdir -p '.$context.$p_type.'/'.$dir.';chmod -R 774 '.$context.$p_type.';mkdir -p '.$sandbox.$p_type.'/'.$dir.';chmod -R 774 '.$sandbox.$p_type;
 
 	exec($cmd); //create the destination and sandbox directories
-	
+
 	//peg gets passed to <asyncmediaprocessor>.php in a BASH param
 	$peg=(object)array(
 		"type"=>$p_type,
@@ -50,32 +58,35 @@ if($data->method === 'fileup'){
 		"chid"=>$p_chid
 	);
 	$peg=json_encode($peg);
-	
+	$p_vidi = (object) $data->vidi;
+
+	error_log(print_r($_FILES,true));
+
 	//return a error if there was a problem with the file upload
-	if ($_FILES["file"]["error"] > 0) {
-		echo json_encode(makemess('error','There was an unknown error with the file upload. Please advise your system admin.'));		
+	if (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
+		echo json_encode(makemess('error','There was an unknown error with the file upload. Please advise your system admin.'));
 	} else {
-		
-		//continue processing the file		
+
+		//continue processing the file
 		if($p_type==='fvideo' || $p_type==='bvideo' || $p_type==='oaudio'){ //handle for videos and audio
-			
-			$p_vidi=json_decode($p_vidi);
+
+			error_log(print_r($p_vidi,true));
 			if(!$p_vidi->vurl){
-				$vtemp=$_FILES["file"];
-			}			
+				$vtemp=$_FILES['file'];
+			}
 			include('media/media.php');
 			return;
-		} 
+		}
 		if($p_type==='timage' || $p_type==='fimage' || $p_type==='foverlay'){ //handle for images
 
-			$filename=$_FILES["file"]["name"];
+			$filename=$_FILES['file']['name'];
 			$title=explode(".", $filename);
 			array_pop($title);
 			$title=implode('',$title);
 			$title=title($title,true);
 			$title=$dir.$title;
-			
-			
+
+
 			$source=$sandbox.$p_type.'/'.$dir.$filename;
 			if($p_type==='foverlay'){
 				$target=$context.$p_type.'/'.$title.'.png';
@@ -83,15 +94,15 @@ if($data->method === 'fileup'){
 				$target=$context.$p_type.'/'.$title.'.jpg';
 			}
 
-			$upload=(move_uploaded_file($_FILES["file"]["tmp_name"], $source));
+			$upload=(move_uploaded_file($_FILES['file']['tmp_name'], $source));
 			if($upload){
 				$cmd='chmod 774 '.$source;
-				exec($cmd);				
+				exec($cmd);
 				if($p_type==='timage'){
 					$cmd='convert "'.$source.'" -resize 960 -quality 80 '.$target;
 
 					exec($cmd);
-					
+
 				}
 				if($p_type==='fimage' || $p_type==='foverlay'){
 					$cmd='convert "'.$source.'" -ping -format %w info:';
@@ -104,7 +115,7 @@ if($data->method === 'fileup'){
 					$cmd=$cmd.';rm -r '.$sandbox.$p_type.'/'.$dir;
 					exec($cmd);
 				}
-				
+
 				if($p_type==='foverlay'){
 					$sql="INSERT INTO resource (type,sid,pid,chid,location) VALUES ('".$p_type."',".$p_sid.",".$p_pid.",".$p_chid.",'".$title.".png')";
 				}else if($p_type==='timage' && $p_pid==-2){
@@ -112,7 +123,7 @@ if($data->method === 'fileup'){
 				}else{
 					$sql="INSERT INTO resource (type,sid,pid,chid,location) VALUES ('".$p_type."',".$p_sid.",".$p_pid.",".$p_chid.",'".$title.".jpg')";
 				}
-				
+
 				commit($sql);
 				echo json_encode(makemess('success','The image was saved'));
 				return;
@@ -131,7 +142,7 @@ if($data->method === 'delres'){
 
 	if($p_type==='timage' && $p_pid==-2){
 		$sql = "SELECT location FROM story WHERE sid = ".$p_sid;
-		
+
 	}else{
 		$sql = "DELETE FROM resource WHERE type = '".$p_type."' AND sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid." RETURNING *;";
 	}
@@ -172,7 +183,7 @@ if($data->method === 'delres'){
 			if($p_type==='timage' && $p_pid==-2){
 				$sql="UPDATE story SET location = NULL WHERE sid = ".$p_sid;
 				commit($sql);
-			}			
+			}
 		}
 		if($p_type==='oaudio'){
 			foreach ($arr as $item){
@@ -192,7 +203,7 @@ if($data->method === 'validate' && $authorised){
 	echo('valid');
 }
 if($data->method === 'getsid'){
-	
+
 	global $p_title,$dbh;
 	$sql = "SELECT sid FROM story WHERE title= '".$p_title."'";
 	$result = pg_query($dbh, $sql);
@@ -231,20 +242,20 @@ if($data->method === 'new_story'){
 			$arr = pg_fetch_all($result);
 			$chid=$arr[0]['chid'];
 			$sql = "INSERT INTO page (sid,chid,p_order,title) VALUES (".$sid.",".$chid.",0,'Page title') RETURNING chid";
-			$result = pg_query($dbh, $sql);		
+			$result = pg_query($dbh, $sql);
 			if (!$result) {
 				$return = array(
 					"result"=>pg_last_error($dbh),
 				);
 				echo json_encode($return);
-			}else{	
+			}else{
 				$return = array(
 					"result"=>"success story",
 					"title"=>$p_title,
 					"sid"=>$sid
 				);
 				echo json_encode($return);
-			}	
+			}
 		}
 	}
 }
@@ -262,7 +273,7 @@ if($data->method === 'new_chapter'){
 		$arr = pg_fetch_all($result);
 		$chid=$arr[0]['chid'];
 		$sql = "INSERT INTO page (sid,chid,p_order,title) VALUES (".$p_sid.",".$chid.",0,'Page title')";
-		$result = pg_query($dbh, $sql);		
+		$result = pg_query($dbh, $sql);
 		if (!$result) {
 			$return = array(
 				"result"=>pg_last_error($dbh),
@@ -274,12 +285,12 @@ if($data->method === 'new_chapter'){
 				"chid"=>$chid,
 				"c_order"=>$p_corder
 			);
-			echo json_encode($return);	
-		}	
-	}	
+			echo json_encode($return);
+		}
+	}
 }
 if($data->method === 'new_page'){
-	
+
 	global $p_title,$p_sid,$dbh,$p_chid,$p_porder;
 	$sql = "UPDATE page SET p_order=p_order + 1 WHERE sid=".$p_sid." AND chid=".$p_chid." AND p_order >= ".$p_porder."; INSERT INTO page (title,sid,p_order,chid) VALUES ('".$p_title."',".$p_sid.",".$p_porder.",".$p_chid.") RETURNING pid";
 
@@ -296,12 +307,12 @@ if($data->method === 'new_page'){
 			"p_order"=>$p_porder,
 			"pid"=>$arr[0]['pid']
 		);
-		echo json_encode($return);	
-	}		
+		echo json_encode($return);
+	}
 }
 
 if($data->method === 'getall'){
-	
+
 	function return_bytes($val) {
 		$val = trim($val);
 		$last = strtolower($val[strlen($val)-1]);
@@ -317,7 +328,7 @@ if($data->method === 'getall'){
 
 		return $val;
 	}
-		
+
 	global $p_sid,$dbh;
 	$maxsize1 = ini_get('post_max_size');
 	$maxsize2 = ini_get('upload_max_filesize');
@@ -327,7 +338,7 @@ if($data->method === 'getall'){
 	}else{
 		$all['maxsize'] = $maxsize1;
 	}
-	
+
 	$sql = "SELECT * FROM story WHERE sid = ".$p_sid;
 	$result = pg_query($dbh, $sql);
 	if (!$result) {
@@ -435,7 +446,7 @@ if($data->method === 'delpage'){
 	}
 }
 if($data->method === 'edit'){
-	
+
 	global $p_type,$p_value,$p_chid,$p_pid,$p_porder,$p_corder,$p_story_name,$p_story_text,$p_chapter_title,$p_chapter_subtitle,$p_chapter_mentitle,$p_page_title,$p_page_text,$p_page_menshow,$dbh;
 	if($p_type == 'story'){
 		$sql = "UPDATE ".$p_type." SET title = '".$p_story_name."', text = '".$p_story_text."' WHERE sid = ".$p_sid;
@@ -450,7 +461,7 @@ if($data->method === 'edit'){
 	if (!$result) {
 		echo json_encode(pg_last_error($dbh));
 	}else{
-		
+
 		$return = (object)array(
 			"result"=>"success"
 		);
@@ -484,7 +495,7 @@ if($data->method === 'redit'){
 	}
 }
 if($data->method == 'order'){
-	
+
 	global $p_direction,$p_position,$p_context,$p_sid,$p_chid,$p_pid,$p_swap,$dbh;
 	if ($p_direction == 'up'){
 		$sum = -1;
@@ -509,9 +520,9 @@ if($data->method == 'order'){
 		}else{
 			$sql = "
 			UPDATE ".$p_context." SET p_order = -2 WHERE sid =".$p_sid." AND chid=".$p_chid." AND p_order = ".$p_position.";
-			UPDATE ".$p_context." SET p_order = p_order - ".$sum." WHERE sid =".$p_sid." AND chid=".$p_chid." AND p_order = ".($p_position + $sum).";	
-			UPDATE ".$p_context." SET p_order = ".($p_position + $sum)." WHERE sid =".$p_sid." AND chid=".$p_chid." AND p_order = -2 RETURNING chid,p_order,pid;		
-			";			
+			UPDATE ".$p_context." SET p_order = p_order - ".$sum." WHERE sid =".$p_sid." AND chid=".$p_chid." AND p_order = ".($p_position + $sum).";
+			UPDATE ".$p_context." SET p_order = ".($p_position + $sum)." WHERE sid =".$p_sid." AND chid=".$p_chid." AND p_order = -2 RETURNING chid,p_order,pid;
+			";
 		}
 	}
 	$result = pg_query($dbh, $sql);
@@ -539,7 +550,7 @@ if($data->method == 'order'){
 			'chid'=>$p_chid,
 			'c_order'=>$p_corder,
 			'pid'=>$p_pid,
-			'p_order'=>$p_porder		
+			'p_order'=>$p_porder
 		);
 		echo json_encode($return);
 	}
@@ -574,7 +585,7 @@ if($data->method === 'poller'){
 if($data->method === 'seenqueue'){
 	global $p_uid;
 
-	$sql = "UPDATE queue SET seen = seen || ".$p_uid."  WHERE NOT (".$p_uid." = ANY (seen)) AND status = 'complete';";	
+	$sql = "UPDATE queue SET seen = seen || ".$p_uid."  WHERE NOT (".$p_uid." = ANY (seen)) AND status = 'complete';";
 	commit($sql);
 }
 if($data->method === 'switcher'){
@@ -582,9 +593,9 @@ if($data->method === 'switcher'){
 	if($p_type==='bvideo'){
 		$newtype='fvideo';
 	}else{
-		$newtype='bvideo';		
+		$newtype='bvideo';
 	}
-	$sql = "UPDATE resource SET type='".$newtype."' WHERE type='".$p_type."' AND sid=".$p_sid." AND chid=".$p_chid." AND pid=".$p_pid;	
+	$sql = "UPDATE resource SET type='".$newtype."' WHERE type='".$p_type."' AND sid=".$p_sid." AND chid=".$p_chid." AND pid=".$p_pid;
 	commit($sql);
 	$path='/'.$p_sid.'/'.$p_chid.'/'.$p_pid;
 	$cmd='

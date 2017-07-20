@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 	<meta charset="utf-8">
 	<title>Dev</title>
-	<base href="/">	
+	<base href="/">
 	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="/static/css/normalize.css"/>
 	<link rel="stylesheet" href="/static/css/fontello.css"/>
@@ -17,22 +17,23 @@
 </head>
 
 <body>
-	<?php 
+	<?php
+
 		if(!file_exists($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
 			header('Location: install/install.php');
-			exit;	
+			exit;
 		}
 		include($_SERVER["DOCUMENT_ROOT"].'/settings.php');
 		if(!isset($installed)){
 			header('Location: install/install.php');
-			exit;			
+			exit;
 		}
 		if(is_writable($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
-			die('<div class="container">Please remove write permissions from '.$_SERVER["DOCUMENT_ROOT"].'/settings.php and reload the page</div>');	
+			die('<div class="container">Please remove write permissions from '.$_SERVER["DOCUMENT_ROOT"].'/settings.php and reload the page</div>');
 		}
 		if(isset($_GET['method']) && $_GET['method']==='setpass'){
 			setcookie('user','{"uid":"'.$_GET['uid'].'","authtoken":"'.$_GET['token'].'","method":"reset"}',0,'/');
-		} 
+		}
 	?>
 	<div id='mainwrapper' ng-controller="common">
 		<div ng-hide='portrait'>
@@ -40,7 +41,7 @@
 				<div ng-controller='admin' id='admin' class='admin'>
 					<div  ng-if='user.authorised'>
 						<div class='topmen'>
-							
+
 							<ul class='activities'>
 								<li ng-click="add('add',null)" ng-class="{'active' : c_admin.context=='add'}">NEW</li>
 								<li ng-click="add('help',null)" ng-class="{'active' : c_admin.context=='help'}" ng-if='all.a.story.sid'>Help</li>
@@ -60,32 +61,32 @@
 							<div class='clearfix'></div>
 						</div>
 						<div id='adminwrap' ng-show="c_admin.context && c_admin.context !== 'admin'" style="width:{{width+style.extra}}px">
-							<?php include("static/html/includes/admin.php") ?>	
+							<?php include("static/html/includes/admin.php") ?>
 						</div>
 						<?php include("static/html/includes/admin2.php") ?>
 					</div>
 					<div id = 'modal' class='modal' ng-show='modal.show_modal' ng-click='modal.toggle()'>
 						<div class='inner'>
 							<div class='content' ng-click='$event.stopPropagation()'>
-								<?php 
-									include('static/html/includes/modals.html'); 
+								<?php
+									include('static/html/includes/modals.html');
 								?>
 							</div>
 						</div>
 					</div>
-					<div id='login' ng-if="!user.authorised && !locate.embedded"> <!-- Remove login link if being viewed through an embedded iframe -->		
-						<a ng-click='modal.modal("login")'>Login</a> 
-					</div>			
+					<div id='login' ng-if="!user.authorised && !locate.embedded"> <!-- Remove login link if being viewed through an embedded iframe -->
+						<a ng-click='modal.modal("login")'>Login</a>
+					</div>
 				</div>
 				<div id='viewport' ng-style="{height:height}" ng-view='viewport'>
-					
+
 				</div>
-				<div id='loader' class='loader' ng-hide='c.iready'></div>	
-								
+				<div id='loader' class='loader' ng-hide='c.iready'></div>
+
 			</div>
-			
+
 		</div>
-		<div ng-if='portrait'>	
+		<div ng-if='portrait'>
 			<div id="landscape">
 				<div class='inner'>
 					<div class='content'>
@@ -95,7 +96,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<script language="javascript" type="text/javascript" src="node_modules/angular/angular.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
@@ -106,12 +107,12 @@
 	<script language="javascript" type="text/javascript" src="/static/js/angular/filters/filters.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-animate/angular-animate.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-cookies/angular-cookies.min.js"></script>
-	<script language="javascript" type="text/javascript" src="node_modules/angular-moment/node_modules/moment/moment.js"></script>
+	<script language="javascript" type="text/javascript" src="node_modules/moment/moment.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-moment/angular-moment.js"></script>
 
 	<script language="javascript" type="text/javascript" src="/static/js/angular/home.js"></script>
 	<script language="javascript" type="text/javascript" src="/static/js/angular/story.js"></script>
-	
+
 	<script language="javascript" type="text/javascript" src="/static/js/angular/controllers/controller.admin.js"></script>
 	<script language="javascript" type="text/javascript" src="/static/js/angular/controllers/controller.story.js"></script>
 	<script language="javascript" type="text/javascript" src="/static/js/angular/animations/animations.js"></script>

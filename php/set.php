@@ -1,9 +1,8 @@
 <?php
 require_once('../settings.php');
 
-
 if(file_get_contents("php://input")){
-	$data = json_decode(file_get_contents("php://input"));		
+	$data = json_decode(file_get_contents("php://input"));
 }else{
 	$data = new stdClass();
 	$data2 = $_POST;
@@ -12,6 +11,7 @@ if(file_get_contents("php://input")){
 		$data->$key = $value;
 	}
 }
+
 
 if(isset($data)){
 	escape($data);
@@ -36,16 +36,16 @@ $sitename=$arr[0]['pname'];
 function escape($data_batch){
 	foreach($data_batch as $key => $value){
 		global ${'p_'.$key};
-		${'p_'.$key}=pg_escape_string($value);
+		${'p_'.$key}=$value;
 	}
 }
 
 function commit($sql){
-	
+
 	global $dbh;
-	
+
 	$result = pg_query($dbh, $sql);
-	if (!$result) {				
+	if (!$result) {
 		echo json_encode(pg_last_error($dbh));
 		pg_close($dbh);
 	}
@@ -55,7 +55,7 @@ function errlog($message){
 	$log = dirname(__FILE__)."/../utils/error.log";
 	$fh = fopen($log, 'a') or die("can't open file");
 	fwrite($fh, $message."\n");
-	fclose($fh);	
+	fclose($fh);
 }
 
 //helper to construct a singleton return message
@@ -69,9 +69,9 @@ function makemess($type,$mess){
 }
 //Queue processing
 function queue($cmd,$mess,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title){
-				
+
 	global $dbh;
-			
+
 	//submit the command to queue
 	$sql="INSERT INTO queue (time,command,status,sid,chid,pid,porder,corder,type,title) VALUES (current_timestamp,".pg_escape_literal($cmd).",'queued',".$p_sid.",".$p_chid.",".$p_pid.",".$p_porder.",".$p_corder.",'".$p_type."','".$title."')";
 
@@ -80,20 +80,20 @@ function queue($cmd,$mess,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$tit
 }
 
 function qprocess(){
-	
+
 	global $dbh,$cores,$maxq;
-	
+
 	$running=array();
 	$queued=array();
 
 	$sql="SELECT * FROM queue ORDER BY time ASC";
 	$result = pg_query($dbh, $sql);
 	$arr = pg_fetch_all($result);
-	
+
 	if(count($arr) > 0){
-		
-		foreach($arr as $item){	
-	
+
+		foreach($arr as $item){
+
 			if($item['status']==='queued'){
 				array_push($queued,$item);
 			}else if($item['status']!=='complete'){
@@ -113,7 +113,7 @@ function qprocess(){
 					break;
 				}
 			}
-			
+
 		}
 	}
 	pg_close($dbh);
@@ -121,7 +121,7 @@ function qprocess(){
 //delete an item from the queue
 function delq(){
 	global $p_type,$p_sid,$p_chid,$p_pid;
-	
+
 	$sql="DELETE FROM queue WHERE type='".$p_type."' AND  sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid;
 	echo "\n".$sql."\n";
 	commit($sql);

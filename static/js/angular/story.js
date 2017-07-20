@@ -2,16 +2,16 @@
 
 Asp.page.story=angular.module('story', [])
 .controller('story', ['$scope','$location','$cookieStore','$timeout','getter',function($scope,$location,$cookieStore,$timeout,getter) {
-	
+
 	$('#preload').html('');
-	
+
 	$scope.c.context={
 		sid:false
 	};
-	$scope.c_admin.context=null;		
+	$scope.c_admin.context=null;
 	$scope.c.iready=false; //set the page to 'loading'
 	$scope.style.extra = 0;
-	
+
 	/*-------------------------------------- Get the page context id ---------------------------------*/
 	var page = $location.search();
 	if(page.story){
@@ -25,17 +25,17 @@ Asp.page.story=angular.module('story', [])
 	}
 	if(page.request=='embedded'){ //log user out if story is being accessed through an iframe embed
 		$scope.locate.embedded=true;
-		
+
 		$scope.c.logout();
 	}
-	
-	
+
+
 	/*-------------------------------------- Load the page resources from id ---------------------------------*/
-	
+
 	$scope.$watch('c.context.sid',function(){ //watch for asynchronouse changes to the page id
-		
+
 		$scope.all.a={};
-		
+
 		if($scope.c.context.sid){ //ignore initial creation of 'c.context.sid'
 			var sid=$scope.c.context.sid;
 
@@ -43,7 +43,7 @@ Asp.page.story=angular.module('story', [])
 				data.resource2={};
 				data.resource2[-1]={};
 				data.resource2[-1][-2]={}; //the container for the opening slide
-				
+
 				//sort 1
 				angular.forEach(data.chapter,function(value,key){
 					data.resource2[data.chapter[key].chid]={};
@@ -57,26 +57,26 @@ Asp.page.story=angular.module('story', [])
 						}
 					})
 				})
-					
+
 				//sort 2
 				angular.forEach(data.resource,function(value,key){
 					delete data.resource[key].sid;
 
 					if(typeof data.resource2[data.resource[key].chid][data.resource[key].pid][data.resource[key].type] === 'undefined'){
-						data.resource2[data.resource[key].chid][data.resource[key].pid][data.resource[key].type]=[];							
+						data.resource2[data.resource[key].chid][data.resource[key].pid][data.resource[key].type]=[];
 					}
 					if(data.resource[key].type === 'bvideo'){
 						if(data.resource[key].bvmute === 't'){
 							data.resource2[data.resource[key].chid][data.resource[key].pid].bvmute = true;
 						}else{
-							data.resource2[data.resource[key].chid][data.resource[key].pid].bvmute = false;							
+							data.resource2[data.resource[key].chid][data.resource[key].pid].bvmute = false;
 						}
 					}
 					if(data.resource[key].location){
 						data.resource2[data.resource[key].chid][data.resource[key].pid][data.resource[key].type].location = data.resource[key].location;
-						
-						//preload the poster and featured images by dumping them into a hidden container which calls imagesready						
-						$('#preload').append("<img src='"+$scope.lib+[data.resource[key].type]+"/"+data.resource[key].location+"'/>"); 
+
+						//preload the poster and featured images by dumping them into a hidden container which calls imagesready
+						$('#preload').append("<img src='"+$scope.lib+[data.resource[key].type]+"/"+data.resource[key].location+"'/>");
 					}
 					if(data.resource[key].astop === 't'){
 						data.resource2[data.resource[key].chid][data.resource[key].pid].astop = true;
@@ -98,18 +98,18 @@ Asp.page.story=angular.module('story', [])
 					if(!data.resource2[data.resource[key].chid][data.resource[key].pid][data.resource[key].type].a_mp3 && data.resource[key].a_mp3){
 						data.resource2[data.resource[key].chid][data.resource[key].pid][data.resource[key].type].a_mp3 = $scope.lib+[data.resource[key].type]+"/"+data.resource[key].a_mp3;
 					}
-					
+
 				})
 				//trigger to remove loading overlay and proceed when images have loaded
 				imagesLoaded( '#preload', function() {
-					
-					$scope.$apply(function(){
-						
+
+					$timeout(function(){
+
 						data.resource = data.resource2;
 						delete(data.resource2);
-						
+
 						//sort 3 assign the 'carry' states for each slide and duplicate carried media into their semantic boxes
-						angular.forEach(data.chapter,function(chapter,key){					
+						angular.forEach(data.chapter,function(chapter,key){
 							angular.forEach(chapter.page,function(page,key2){
 								if(key2 == 0){
 									var prev = -1;
@@ -130,10 +130,10 @@ Asp.page.story=angular.module('story', [])
 								}else{
 									data.resource[chapter.chid][page.pid].fcarry=false;
 								}
-								if(!data.resource[chapter.chid][page.pid].oaudio 
-								&& !data.resource[chapter.chid][page.pid].fvideo 
-								&& data.resource[chapter.chid][prev].oaudio 
-								&& !data.resource[chapter.chid][page.pid].astop 
+								if(!data.resource[chapter.chid][page.pid].oaudio
+								&& !data.resource[chapter.chid][page.pid].fvideo
+								&& data.resource[chapter.chid][prev].oaudio
+								&& !data.resource[chapter.chid][page.pid].astop
 								&& !(data.resource[chapter.chid][page.pid].bvideo && !data.resource[chapter.chid][page.pid].bvmute)){
 									data.resource[chapter.chid][page.pid].oaudio=data.resource[chapter.chid][prev].oaudio
 									data.resource[chapter.chid][page.pid].acarry=true;
@@ -143,10 +143,10 @@ Asp.page.story=angular.module('story', [])
 							})
 						})
 
-						delete data.page;				
+						delete data.page;
 						data.maxbyte=parseFloat(data.maxsize)*1048576;
-						
-						//get the end point chapter and page 
+
+						//get the end point chapter and page
 						if(data.chapter.length){
 							data.endchap=data.chapter.length-1;
 						}else{
@@ -157,22 +157,22 @@ Asp.page.story=angular.module('story', [])
 						}else{
 							data.endpage=0
 						}
-						
+
 
 						//----------- Just about done and ready to render ----------//
 						$scope.all.a=data;
 						$scope.c.iready=true; //remove the loading overlay
-							
+
 						//----------- have a look at the 'all' object to understand the data structure and syntax ----------//
 						//console.log($scope.all.a);
-							
 
-							
+
+
 						//Put a viewer back to their original position on page refresh, else to start of story
-						if($cookieStore.get('context') && $cookieStore.get('context').sid == $scope.all.a.story.sid){		
+						if($cookieStore.get('context') && $cookieStore.get('context').sid == $scope.all.a.story.sid){
 							$scope.c.context=$cookieStore.get('context');
 						}else{
-								
+
 							$scope.c.context={
 								'sid':$scope.all.a.story.sid*1,
 								'chid':-1,
@@ -180,19 +180,19 @@ Asp.page.story=angular.module('story', [])
 								'pid':-2,
 								'p_order':0
 							};
-								
+
 						}
 					});
-				});								
+				});
 			})
 
 		}
 	})
-	/*-------------------------------------- Page switchers ---------------------------------*/	
+	/*-------------------------------------- Page switchers ---------------------------------*/
 	//dynamic page switcher
 
 	$scope.pager=function(dir){
-		
+
 		if(dir == 'next'){
 			if($scope.c.context.chid == -1){
 				$scope.all.go($scope.c.context.sid,0,-1,$scope.all.a.chapter[0].chid,-1);
@@ -207,7 +207,7 @@ Asp.page.story=angular.module('story', [])
 			}else if($scope.c.context.p_order > 0){
 				$scope.all.go($scope.c.context.sid,$scope.c.context.c_order,$scope.c.context.p_order-1,$scope.c.context.chid,$scope.all.a.chapter[$scope.c.context.c_order].page[$scope.c.context.p_order-1].pid);
 			}else if($scope.c.context.p_order == 0){
-				$scope.all.go($scope.c.context.sid,$scope.c.context.c_order,-1,$scope.c.context.chid,-1);			
+				$scope.all.go($scope.c.context.sid,$scope.c.context.c_order,-1,$scope.c.context.chid,-1);
 			}else{
 				var end = $scope.size($scope.all.a.chapter[$scope.c.context.c_order-1].page)-1
 				if(end > -1){
@@ -223,11 +223,11 @@ Asp.page.story=angular.module('story', [])
 					$scope.c.context.c_order-1,
 					end,
 					$scope.all.a.chapter[$scope.c.context.c_order-1].chid,
-					-1);					
-				}	
-			}			
+					-1);
+				}
+			}
 		}
-	}	
+	}
 	//menu page switcher
 	$scope.all.go = function(sid,corder,porder,chid,pid,level){
 		if(level=='top' && $scope.isTouch){
@@ -250,7 +250,7 @@ Asp.page.story=angular.module('story', [])
 			//$scope.hover.show=null
 		}
 	}
-	
+
 	/*-------------------------------------- Helper Functions ---------------------------------*/
 
 	//Mute the audio
@@ -269,6 +269,6 @@ Asp.page.story=angular.module('story', [])
 			if(typeof Asp.media.fvideo !== 'undefined'){
 				Asp.media.fvideo.muted=x;
 			}
-		}		
-	}		
+		}
+	}
 }]);

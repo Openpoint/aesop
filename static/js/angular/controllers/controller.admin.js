@@ -3,15 +3,15 @@
 // controller for the admin menu
 Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','setter','getter','modal','auth',function($scope,$cookieStore,$timeout,$location,setter,getter,modal,auth) {
 	$scope.modal=modal;
-	
+
 	$scope.placeholder={
 
 	};
 
 	$scope.notification={};
 	$scope.notification.message=null;
-	$scope.notification.type=null;	
-	
+	$scope.notification.type=null;
+
 	//login
 	$scope.login = function(user,password){
 		$cookieStore.remove('user');
@@ -31,7 +31,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				},10);
 			}
 		}
-		auth.login(user,password).then(function(data){		
+		auth.login(user,password).then(function(data){
 				if(data == 'logged in'){
 					modal.toggle();
 					fetchcookie();
@@ -42,16 +42,16 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		});
 
 	}
-	
+
 	//logout
 	$scope.c.logout = function(){
 		$timeout(function(){
 			//if(typeof $scope.user!=='undefined' && $scope.user.authorised){
 				$cookieStore.remove('user');
 				$scope.user={};
-				$scope.c_admin.context=null;						
+				$scope.c_admin.context=null;
 				$scope.wsize();
-				
+
 			//}
 		});
 	}
@@ -70,7 +70,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		setter.newpass(usern).then(function(data){
 			$scope.notification.message=data;
 		})
-	}	
+	}
 	/*-------------------------- Maintain login over sessions -----------------------------------*/
 	//verify that the cookie is the real thing by checking authtoken
 	if($cookieStore.get('user')){
@@ -88,7 +88,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 					})
 				}
 				$scope.c.user=$scope.user.authorised;
-				$scope.c_admin.seenqueue();							
+				$scope.c_admin.seenqueue();
 				$scope.wsize();
 
 			}else{
@@ -96,26 +96,26 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				$cookieStore.remove('user');
 			}
 		})
-		
+
 
 	}else{
 		$scope.user={};
 	}
-	
-	
+
+
 	/*-------------------------- Various editorial functions -----------------------------------*/
-	
+
 	//delete a resource from the database and filesystem
-	$scope.del_r = function(type,sid,pid,chid){			
+	$scope.del_r = function(type,sid,pid,chid){
 		setter.deleteres(type,sid,pid,chid).then(function(data){
 
-			$scope.reload();			
+			$scope.reload();
 		})
 	}
 	//retry a failed job
-	$scope.retry = function(rid){			
+	$scope.retry = function(rid){
 		setter.retry(rid);
-	}	
+	}
 	//delete a story, chapter or page
 	$scope.del=function(item){
 		if(item==='page'){
@@ -131,7 +131,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 					$cookieStore.put('context',contex);
 					$scope.modal.modal();
 					$scope.reload();
-					
+
 				}
 			})
 		}
@@ -145,7 +145,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 							'c_order':0,
 							'chid':-1,
 							'p_order':0,
-							'pid':-2							
+							'pid':-2
 						}
 					}else{
 						contex.chid=$scope.all.a.chapter[$scope.c.context.c_order-1].chid;
@@ -156,7 +156,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 					$cookieStore.put('context',contex);
 					$scope.modal.modal();
 					$scope.reload();
-					
+
 				}
 			})
 		}
@@ -166,13 +166,13 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 					$cookieStore.remove('context');
 					$scope.modal.modal();
 					window.location='/#/home';
-					
+
 				}
 			})
 		}
 	}
 
-	
+
 	//add a new story, chapter or page
 	$scope.submit=function(context,title,sid,chid,pid){
 
@@ -186,7 +186,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				var p_order=$scope.all.a.chapter[$scope.c.context.c_order].page.length;
 			}else{
 				var p_order=0;
-			}			
+			}
 		}else{
 			var c_order=0;
 			var p_order=0;
@@ -197,11 +197,11 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			var p_order=-1;
 		}else if(context==='page'){
 			var c_order=$scope.c.context.c_order;
-			var p_order=$scope.c.context.p_order+1;			
+			var p_order=$scope.c.context.p_order+1;
 		}
 		setter.add(context,title,sid,chid,pid,c_order,p_order).then(function(data){
 
-			
+
 			if (data.result.indexOf("duplicate key value violates unique constraint") > -1){
 				$scope.notice('warning',"'"+title+"' already exists - please add an unique title");
 			}else{
@@ -217,19 +217,19 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				if(data.result == 'success story'){
 					window.location='/#/story?story='+data.title;
 					$scope.c.context.sid=data.sid;
-				} 
+				}
 				if(data.result == 'success page'){
-					
+
 					var contex=JSON.parse(JSON.stringify($scope.c.context));
 					contex.pid=data.pid*1;
 					contex.p_order=data.p_order*1;
 					$cookieStore.put('context',contex);
-					$scope.reload();										
-				} 
+					$scope.reload();
+				}
 			}
 		});
 	}
-	
+
 	//change the background video mute state
 	$scope.bvchange=function(x){
 		if(x){
@@ -245,7 +245,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			}
 		})
 	}
-	
+
 	//stop carrying the background audio
 	$scope.astop=function(x){
 		if(x){
@@ -259,14 +259,14 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			}
 		})
 	}
-	
+
 	//edit page content
 	$scope.edit=function(type,story_name,story_text, chapter_title, chapter_subtitle, chapter_mentitle, page_title, page_text, page_menshow){
 
 		if(page_menshow && type == "page"){
 			page_menshow = 't';
 		}else if(type == "page"){
-			page_menshow = 'f';			
+			page_menshow = 'f';
 		}
 
 		setter.edit(type,story_name,story_text, chapter_title, chapter_subtitle, chapter_mentitle, page_title, page_text, page_menshow, $scope.c.context).then(function(data){
@@ -280,15 +280,15 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		setter.switcher(type,$scope.c.context.sid,$scope.c.context.chid,$scope.c.context.pid).then(function(){
 			$scope.reload();
 		})
-	}	
+	}
 	//change the order of a chapter or page
 	$scope.reorder = function(direction,order,type,chid,pid,action){
 		setter.order(direction,order,type,$scope.c.context.sid,chid,pid,action).then(function(data){
 			if (data.status == 'success'){
-				
+
 				delete(data.status);
 				console.log(data);
-				
+
 				if(data.c_order === 'undefined'){
 					data.c_order=$scope.c.context.c_order;
 				};
@@ -300,7 +300,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 					if(data.pid==-2){
 						data.pid=-1;
 					}
-				};				
+				};
 				for (var key in data) {
 					data[key]=data[key]*1;
 				}
@@ -308,12 +308,12 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				$scope.reload();
 			}else{
 				console.log(data);
-			}												
-		})				
-	}	
+			}
+		})
+	}
 	//set values for content edit forms
 	$scope.$watch("all.a.story.title",function(){
-			
+
 		if($scope.all.a && $scope.all.a.story && $scope.all.a.story.title){
 			subcon();
 			$scope.story_name=$scope.all.a.story.title;
@@ -396,7 +396,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		}
 	}
 
-	
+
 	//the message alert system - types are message, warning, error, success
 	$scope.notice=function(type,message){
 		console.log(message);
@@ -422,7 +422,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		if(typeof $scope.placeholder[$scope.c_admin.subcontext] === 'undefined'){
 			$scope.placeholder[$scope.c_admin.subcontext]={};
 		}
-		
+
 		$scope.placeholder[$scope.c_admin.subcontext].vidi={
 			start:{
 				h:0,
@@ -432,12 +432,12 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			end:{
 				h:0,
 				m:0,
-				s:0			
+				s:0
 			},
 			vurl:null
 		}
 	}
-		
+
 	//reload story details after admin function
 	$scope.reload=function(home){
 		$scope.c_admin.seenqueue();
@@ -446,11 +446,11 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			contex.sid=$scope.c.context.sid;
 		}
 		$scope.c.context={};
-		$timeout(function(){						
+		$timeout(function(){
 			$scope.c.context=contex;
 		});
 	}
-	
+
 	//get the process queue
 	$scope.c_admin.getqueue=function(){
 		$timeout.cancel(Asp.poller);
@@ -469,7 +469,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 					data[i].message=JSON.parse(data[i].message);
 					$scope.c_admin.queue.error.push(data[i]);
 				}else if(data[i].status==='complete'){
-					
+
 					$scope.c_admin.queue.complete.push(data[i]);
 				}else if(data[i].status==='queued'){
 					$scope.c_admin.queue.queued.push(data[i]);
@@ -482,30 +482,30 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 				$scope.c_admin.polling0=false;
 				$timeout.cancel(Asp.poller);
 				$timeout.cancel(Asp.poller2);
-				Asp.poller2=$timeout(function(){					
+				Asp.poller2=$timeout(function(){
 					$scope.c_admin.getqueue();
 				},5000)
-			}else{				
+			}else{
 				$scope.c_admin.polling0=true;
 				$scope.c_admin.poller();
 			}
 		})
 	}
-	
+
 	//tag done jobs as seen in the queue
 	$scope.c_admin.seenqueue=function(){
 		setter.seenqueue($scope.user.uid).then(function(data){
 			$scope.c_admin.getqueue();
 		})
-	}	
+	}
 	//lightweight poller to check if there is content being processed
 	$scope.c_admin.poller=function(){
 		$timeout.cancel(Asp.poller);
-		$timeout.cancel(Asp.poller2);		
+		$timeout.cancel(Asp.poller2);
 		if($scope.c_admin.polling0){
 			getter.poller().then(function(data){
 				$timeout.cancel(Asp.poller);
-				$timeout.cancel(Asp.poller2);				
+				$timeout.cancel(Asp.poller2);
 				if(data > 0){
 					$scope.c_admin.getqueue();
 				}else{
@@ -516,7 +516,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			})
 		}
 	}
-			
+
 }])
 //controller for detailed admin panel
 .controller('admin2', ['$scope','getter',function($scope,getter) {
@@ -532,7 +532,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		})
 	}
 	$scope.getusers();
-	
+
 	//add a new user
 	$scope.newuser=function(){
 		setter.newuser($scope.newusername,$scope.newusermail,$scope.mailmessage).then(function(data){
@@ -541,28 +541,27 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		});
 		$scope.newusername=null;
 		$scope.newusermail=null;
-		
-	}	
+
+	}
 }])
 //controller for file uploads
 
 Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',function($scope, $http, $timeout, Upload) {
 
-	
 
-	$scope.c_admin.setvid();	
+
+	$scope.c_admin.setvid();
 	$scope.onFileSelect = function($files,input) {
 
-		
 		$scope.input=$('.admin_subsection input.'+input)[0];
 		$scope.uploading=false;
 		if($files.length > 0){
-			
+
 			//get the file mimetype
 			var mime=$files[0].type;
 			mime=mime.split('/');
 			$scope.placeholder[$scope.c_admin.subcontext]={};
-			
+
 			var thisfile=$scope.placeholder[$scope.c_admin.subcontext].selectedFiles=$files;
 			$scope.placeholder[$scope.c_admin.subcontext].progress = 0;
 
@@ -575,14 +574,14 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 					$scope.c_admin.setvid();
 				}
 				$scope.notice(null,mes);
-								
+
 			}
-						
+
 			//set the allowed upload file types
 			$scope.placeholder[$scope.c_admin.subcontext].allowed = [];
 			if($scope.c_admin.subcontext === 'fimage' || $scope.c_admin.subcontext === 'timage'){
 				if(mime[0]!=='image'){
-					mes[0]={	
+					mes[0]={
 						message:thisfile[0].name+" is not an image file and has been removed.",
 						class:'warning'
 					};
@@ -593,7 +592,7 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 
 			if($scope.c_admin.subcontext === 'foverlay'){
 				if(mime[1]!=='png'){
-					mes[0]={	
+					mes[0]={
 						message:thisfile[0].name+" is not of the type '.png' and has been removed.",
 						class:'warning'
 					};
@@ -604,7 +603,7 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 
 			if($scope.c_admin.subcontext === 'fvideo' || $scope.c_admin.subcontext == 'bvideo'){
 				if(mime[0]!=='video'){
-					mes[0]={	
+					mes[0]={
 						message:thisfile[0].name+" is not a video file and has been removed.",
 						class:'warning'
 					};
@@ -616,7 +615,7 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 			}
 			if($scope.c_admin.subcontext === 'oaudio'){
 				if(mime[0]!=='audio' && mime[1]!=='ogg'){
-					mes[0]={	
+					mes[0]={
 						message:thisfile[0].name+" is not an audio file and has been removed.",
 						class:'warning'
 					};
@@ -626,48 +625,47 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 					$scope.c_admin.setvid();
 				}
 			}
-			
+
 			//check files for size and type
 
-			if(thisfile[0].size > $scope.all.a.maxbyte){								
+			if(thisfile[0].size > $scope.all.a.maxbyte){
 				mes[0]={
 					message:thisfile[0].name+" is too big to upload and has been removed. Max size = "+$scope.all.a.maxsize,
 					class:'warning'
 				};
 				$scope.kick(mes);
-				return;		
+				return;
 			};
 
-	
-				
 
-			
+
+
+
 			// get thumbnail preview
-			
+
 			if (window.FileReader && thisfile[0].type.indexOf('image') > -1) {
 				console.log('thumb');
 				var fileReader = new FileReader();
 				fileReader.readAsDataURL(thisfile[0]);
 				var loadFile = function(fileReader) {
 					fileReader.onload = function(e) {
-						$timeout(function() {
+						$scope.$apply(function() {
 							$scope.placeholder[$scope.c_admin.subcontext].dataUrls = e.target.result;
 						});
 					}
 				}(fileReader);
 			}
-			
-			console.log($scope.placeholder[$scope.c_admin.subcontext]);
 		}
-		
+
 	};
-	
+
 	//start the file upload
 	$scope.start = function(subcontext,scrape) {
-		
+
 		//$scope.c_admin.subcontext=subcontext;
-		
-		
+		console.log(scrape);
+		console.log($scope.placeholder[$scope.c_admin.subcontext]);
+
 		if(!scrape){
 			var file=$scope.placeholder[$scope.c_admin.subcontext].selectedFiles[0];
 		}else{
@@ -675,45 +673,36 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 		}
 		$scope.uploading=true;
 		$scope.placeholder[$scope.c_admin.subcontext].progress=1;
+		var fields = {
+			'method' : 'fileup',
+			'corder' : $scope.c.context.c_order,
+			'chid' : $scope.c.context.chid,
+			'porder' : $scope.c.context.p_order,
+			'pid'  : $scope.c.context.pid,
+			'sid' : $scope.c.context.sid,
+			'type': $scope.c_admin.subcontext,
+			'vidi' : $scope.placeholder[$scope.c_admin.subcontext].vidi
+		}
 		$scope.up=Upload.upload({
 			url : '/php/connect.php',
 			method: 'POST',
-			fields : {
-					'method' : 'fileup',
-					'corder' : $scope.c.context.c_order,
-					'chid' : $scope.c.context.chid,
-					'porder' : $scope.c.context.p_order,
-					'pid'  : $scope.c.context.pid,
-					'sid' : $scope.c.context.sid,
-					'type': $scope.c_admin.subcontext,
-					'vidi' : $scope.placeholder[$scope.c_admin.subcontext].vidi
-				},
+			fields : fields,
 			file: file
-		})
-		.progress(function(evt) {								
-			$scope.placeholder[$scope.c_admin.subcontext].progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));				
-		})
-		.error(function(err){
-				console.log(err);
-		})
-		.success(function(data){
-			$scope.notification.message=data;			
-			if(data[0].class==='success'){
+		}).then(function(data){
+			console.log(data)
+			$scope.notification.message=data.data;
+			if(data.data[0].class==='success'){
 				$scope.placeholder[$scope.c_admin.subcontext]={};
 				$scope.reload();
 			}
-
+		},function(err){
+			console.error(err);
+		},function(evt){
+			$scope.placeholder[$scope.c_admin.subcontext].progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
 		})
-		.xhr(function(xhr){
-			//console.log(xhr);
-			//xhr.addEventListener('onloadend',function(){
-				//console.log(xhr);
-			//})
-				
-		});
 
 	};
-		
+
 	$scope.abort=function(){
 		if($scope.up){
 			$scope.up.abort();

@@ -1,13 +1,13 @@
 <div id='panel' ng-controller='panel' ng-style="{width:width,height:height}" ng-hide="c_admin.context === 'admin'">
 		<audio id="acontrols" ng-if="
-		(size(all.a.resource[c.context.chid][c.context.pid].oaudio) > 0 && all.a.resource[c.context.chid][c.context.pid].bvmute) || 
+		(size(all.a.resource[c.context.chid][c.context.pid].oaudio) > 0 && all.a.resource[c.context.chid][c.context.pid].bvmute) ||
 		(size(all.a.resource[c.context.chid][c.context.pid].oaudio) > 0 && !all.a.resource[c.context.chid][c.context.pid].fvideo && !all.a.resource[c.context.chid][c.context.pid].bvideo)" controls loop>
-		<source ng-if="all.a.resource[c.context.chid][c.context.pid].oaudio.a_ogg" src="{{all.a.resource[c.context.chid][c.context.pid].oaudio.a_ogg}}" type="audio/ogg">
-		<source ng-if="all.a.resource[c.context.chid][c.context.pid].oaudio.a_mp3" src="{{all.a.resource[c.context.chid][c.context.pid].oaudio.a_mp3}}" type="audio/mpeg">
+		<source ng-if="all.a.resource[c.context.chid][c.context.pid].oaudio.a_ogg" ng-src="{{all.a.resource[c.context.chid][c.context.pid].oaudio.a_ogg}}" type="audio/ogg">
+		<source ng-if="all.a.resource[c.context.chid][c.context.pid].oaudio.a_mp3" ng-src="{{all.a.resource[c.context.chid][c.context.pid].oaudio.a_mp3}}" type="audio/mpeg">
 
-		<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm && isTouch && !all.a.resource[c.context.chid][c.context.pid].bvmute" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm}}" type="video/webm">
-		<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4 && isTouch && !all.a.resource[c.context.chid][c.context.pid].bvmute" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4}}" type="video/mp4">
-		<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv && isTouch && !all.a.resource[c.context.chid][c.context.pid].bvmute" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv}}" type="video/ogg">			
+		<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm && isTouch && !all.a.resource[c.context.chid][c.context.pid].bvmute" ng-src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm}}" type="video/webm">
+		<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4 && isTouch && !all.a.resource[c.context.chid][c.context.pid].bvmute" ng-src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4}}" type="video/mp4">
+		<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv && isTouch && !all.a.resource[c.context.chid][c.context.pid].bvmute" ng-src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv}}" type="video/ogg">
 	</audio>
 	<div id='textframe' ng-controller='textframe' ng-style="{height:height-40}" ng-hide="size(all.a.resource[c.context.chid][c.context.pid].fvideo) > 0" ng-class="{'story':c.context.chid==-1,'chapter':c.context.pid==-1,'page':c.context.pid > 0}">
 		<!--<div>sid={{c.context.sid}} | chid={{c.context.chid}} | pid={{c.context.pid}} | corder={{c.context.c_order}} | porder={{c.context.p_order}}</div>-->
@@ -16,7 +16,7 @@
 				<h1>{{all.a.story.title}}</h1>
 				<p>{{all.a.story.text}}</p>
 			</div>
-			<div ng-show='c.context.pid == -1'>			
+			<div ng-show='c.context.pid == -1'>
 				<!--<div class='edit' ng-click='modal("c_tit")'>edit</div>-->
 				<h1>{{all.a.chapter[c.context.c_order].title}}</h1>
 				<!--<div class='edit' ng-click='modal("c_subtit")'>edit</div>-->
@@ -26,7 +26,7 @@
 				<!--<div class='edit' ng-click='modal("p_tit")' ng-show="all.a.chapter[c.context.c_order].page[c.context.p_order].menushow == 't'">edit</div>-->
 				<h1 ng-show="all.a.chapter[c.context.c_order].page[c.context.p_order].menushow == 't'">{{all.a.chapter[c.context.c_order].page[c.context.p_order].title}}</h1>
 				<!--<div class='edit' ng-click='modal("p_text")'>edit</div>-->
-				<p>{{all.a.chapter[c.context.c_order].page[c.context.p_order].text}}</p>			
+				<p>{{all.a.chapter[c.context.c_order].page[c.context.p_order].text}}</p>
 			</div>
 			<div id="textend"></div>
 		</div>
@@ -43,12 +43,12 @@
 		<div class='inner'>
 			<img class='overlay' ng-style="{width:style.awidth,height:style.aheight}" ng-if="all.a.resource[c.context.chid][c.context.pid].foverlay.location" ng-src="{{lib}}foverlay/{{all.a.resource[c.context.chid][c.context.pid].foverlay.location}}" />
 			<video class="bvideo" ng-style="{width:style.awidth,height:style.aheight}" ng-if="size(all.a.resource[c.context.chid][c.context.pid].bvideo) > 0" loop  preload='auto'>
-				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm && !isTouch" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm}}" type="video/webm">
-				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4 && !isTouch" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4}}" type="video/mp4">
-				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv && !isTouch" src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv}}" type="video/ogg">
-				Your browser does not support the video tag.	
+				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm && !isTouch" ng-src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_webm}}" type="video/webm">
+				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4 && !isTouch" ng-src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_mp4}}" type="video/mp4">
+				<source ng-if="all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv && !isTouch" ng-src="{{all.a.resource[c.context.chid][c.context.pid].bvideo.v_ogv}}" type="video/ogg">
+				Your browser does not support the video tag.
 			</video>
-		</div>	
+		</div>
 	</div>
 	<div id="media" class="mediaframe" ng-class="{'animate' : c.change === 'animate'}" ng-style="style.css">
 		<div class='inner'>
@@ -56,9 +56,9 @@
 			<img class="fimage" ng-style="{width:style.awidth,height:style.aheight}" ng-if="all.a.resource[c.context.chid][c.context.pid].fimage.location" ng-src="{{lib}}fimage/{{all.a.resource[c.context.chid][c.context.pid].fimage.location}}" />
 			<img class='overlay' ng-style="{width:style.awidth,height:style.aheight}" ng-if="all.a.resource[c.context.chid][c.context.pid].foverlay.location" ng-src="{{lib}}foverlay/{{all.a.resource[c.context.chid][c.context.pid].foverlay.location}}" />
 			<video class="video" ng-if="size(all.a.resource[c.context.chid][c.context.pid].fvideo) > 0" width="{{width-20}}" height="{{height-20}}" preload='auto'  ng-click="vidbut()" ng-mouseenter="vidfade('fade')" ng-mousemove="vidpeg('over')">
-				<source ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_webm" src="{{all.a.resource[c.context.chid][c.context.pid].fvideo.v_webm}}" type="video/webm">
-				<source ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_mp4" src="{{all.a.resource[c.context.chid][c.context.pid].fvideo.v_mp4}}" type="video/mp4">
-				<source ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_ogv" src="{{all.a.resource[c.context.chid][c.context.pid].fvideo.v_ogv}}" type="video/ogg">
+				<source ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_webm" ng-src="{{all.a.resource[c.context.chid][c.context.pid].fvideo.v_webm}}" type="video/webm">
+				<source ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_mp4" ng-src="{{all.a.resource[c.context.chid][c.context.pid].fvideo.v_mp4}}" type="video/mp4">
+				<source ng-if="all.a.resource[c.context.chid][c.context.pid].fvideo.v_ogv" ng-src="{{all.a.resource[c.context.chid][c.context.pid].fvideo.v_ogv}}" type="video/ogg">
 				Your browser does not support the video tag.
 			</video>
 		</div>
@@ -90,7 +90,7 @@
 
 <div id='sidebar' ng-controller='sidebar' ng-style='{height:height+px}'>
 	<div id='backspacer' ng-if="locate.embedded"></div>
-	<li id='home'><a class='icon-home' href='/#/home'></a></li>
+	<li id='home'><a class='icon-home' href='/home'></a></li>
 	<li class='link chapter story title' ng-click='all.go(all.a.story.sid,0,0,-1,-2)'>{{all.a.story.title}}</li>
 	<div ng-repeat="(key, chapter) in all.a.chapter | orderBy:'corder'" class='chapter link' ng-click="all.go(chapter.sid,key,-1,chapter.chid,-1)" ng-mouseenter="chaphover(key, chapter)"  ng-mouseleave="hover.show=null" ng-class="{'active':c.context.chid > 0 && chapter.c_order == c.context.c_order}">
 		<ul class='pagelist' ng-show="hover.show == chapter.chid">
@@ -119,9 +119,9 @@
 						<img ng-src='{{lib}}timage/{{all.a.resource[chapter.chid][-1].timage.location}}'>
 					</a>
 				</li>
-				<li ng-if='chapter.mentitle' class='bottom'><a class='link' ng-click='all.go(chapter.sid,key,-1,chapter.chid,-1)'>{{chapter.mentitle}}</a></li> 
+				<li ng-if='chapter.mentitle' class='bottom'><a class='link' ng-click='all.go(chapter.sid,key,-1,chapter.chid,-1)'>{{chapter.mentitle}}</a></li>
 			</div>
-			<li ng-repeat="(key2, page) in chapter.page | orderBy:'porder'" ng-show="page.menushow == 't' && page.title.length > 0"> 
+			<li ng-repeat="(key2, page) in chapter.page | orderBy:'porder'" ng-show="page.menushow == 't' && page.title.length > 0">
 				<a class='link' ng-click='$event.preventDefault(); $event.stopPropagation(); all.go(page.sid,key,key2,page.chid,page.pid)'>{{page.title}}</a>
 			</li>
 		</ul>
@@ -134,4 +134,3 @@
 </div>
 <div class='clearfix'></div>
 <div id='preload'></div>
-

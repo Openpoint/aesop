@@ -1,8 +1,8 @@
 <div ng-controller='frontlist' ng-show="c.iready && c_admin.context !== 'admin'" class='container fteaserwrap'>
 	<div ng-if="list!=='false'" ng-repeat='story in list' class="fouter" ng-mouseEnter="down($event)" ng-mouseLeave="down($event)">
 		<div class='w100 fteaser' ng-show="c.iready">
-			<a ng-click='c.iready=false' href='/#/story?story={{story.title}}'>
-				
+			<a ng-click='c.iready=false' href='/story?story={{story.title}}'>
+
 				<img ng-if="story.location" ng-src='/static/resources/timage/{{story.location}}' />
 				<img ng-if="!story.location" ng-src='/static/resources/timage/placeholder.jpg' />
 				<span class='ftitle'>{{story.title}}</span>
