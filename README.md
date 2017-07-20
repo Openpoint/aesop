@@ -8,10 +8,13 @@ Pre ALPHA upload at moment - still busy building deployment strategy.
 Have a look at the demo: http://story.openpoint.ie
 
 Dependencies:
+
 `sudo apt-get install mediainfo libav-tools youtube-dl imagemagick postfix npm`
+
 Also: postgresql >=9
 
 Apache2 mod_rewrite is required 
+
 `sudo a2enmod rewrite`
 
 Apache2 virtualhost config to include:
