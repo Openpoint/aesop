@@ -13,7 +13,7 @@ Dependencies:
 
 Also: postgresql >=9
 
-Apache2 mod_rewrite is required 
+Apache2 mod_rewrite is required
 
 `sudo a2enmod rewrite`
 
@@ -29,7 +29,7 @@ Apache2 virtualhost config to include:
 ```
 Clone, cd into app directory and set permissions:
 ```bash
-sudo chown -R www-data:www-data utils static/resources log/aesop.log
+chmod 777 static/resources/poster static/resources/fvideo static/resources/timage static/resources/bvideo static/resources/fimage utils/fvideo utils/timage utils/bvideo utils/fimage
 ```
 
 Spin it up in a web browser and follow the install insructions
