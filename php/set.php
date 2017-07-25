@@ -1,5 +1,9 @@
 <?php
+ini_set("log_errors", 1);
+ini_set("error_log", "../log/aesop.log");
+
 require_once('../settings.php');
+
 
 if(file_get_contents("php://input")){
 	$data = json_decode(file_get_contents("php://input"));
@@ -32,18 +36,34 @@ $sql="SELECT pname FROM settings";
 $result = pg_query($dbh, $sql);
 $arr = pg_fetch_all($result);
 $sitename=$arr[0]['pname'];
-
+function earray($array){
+	foreach($array as $key=>$value){
+		if(is_array($value)){
+			$array[$key] = earray($value);
+		}else{
+			$array[$key] = pg_escape_string($value);
+			//$array[$key] = 'test';
+		}
+	}
+	return $array;
+}
 function escape($data_batch){
 	foreach($data_batch as $key => $value){
+
 		global ${'p_'.$key};
-		${'p_'.$key}=$value;
+		if(is_array($value)){
+			${'p_'.$key} = earray($value);;
+		}else{
+			${'p_'.$key} = pg_escape_string($value);
+		}
+		if($value !== 'poller'){
+			//error_log(print_r(${'p_'.$key},true));
+		}
 	}
 }
 
 function commit($sql){
-
 	global $dbh;
-
 	$result = pg_query($dbh, $sql);
 	if (!$result) {
 		echo json_encode(pg_last_error($dbh));
@@ -107,6 +127,8 @@ function qprocess(){
 					$slots--;
 					$cmd=$item['command'];
 					exec($cmd,$prid);
+					error_log(print_r($prid,true));
+					//exec($cmd);
 					$sql="UPDATE queue SET  prid=".$prid[0].", status='running' WHERE qid=".$item['qid']*1;
 					commit($sql);
 				}else{
@@ -121,9 +143,20 @@ function qprocess(){
 //delete an item from the queue
 function delq(){
 	global $p_type,$p_sid,$p_chid,$p_pid;
-
 	$sql="DELETE FROM queue WHERE type='".$p_type."' AND  sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid;
-	echo "\n".$sql."\n";
+	//echo "\n".$sql."\n";
 	commit($sql);
+}
+
+//helper to sanitize titles
+function title($tit,$notime){
+	global $starttime, $endtime;
+	$title = str_replace(' ','-',$tit);
+	$title = preg_replace('/[^A-Za-z0-9\-]/', '', $title);
+	if(!$notime){
+		return $title.'_'.$starttime.'_'.$endtime;
+	}else{
+		return $title;
+	}
 }
 ?>

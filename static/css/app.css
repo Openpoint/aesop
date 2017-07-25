@@ -38,6 +38,8 @@ border-radius:14px;
 video {
 position:absolute;
 z-index:1;
+top:0;
+left:0;
 }
 h1{
 font-weight:700;
@@ -542,10 +544,13 @@ height:100%;
 background:#E9E9E9;
 right:-2px;
 top:0;
-} 
+}
 .pimage {
 position:absolute;
 z-index:0;
+}
+#mediafocus .pimage{
+	z-index:100;
 }
 #media .bvideo, #media .pimage {
 /* visibility:hidden; */
@@ -790,7 +795,7 @@ top:3px;
 }
 /* ---------------------------------------------------------------------------------infield labels css stylesheet */
 /*
-::-webkit-input-placeholder { 
+::-webkit-input-placeholder {
     color:white;
     opacity:.5;
 }
@@ -890,4 +895,3 @@ font-size:1.5em;
 text-shadow: 2px 2px 2px black;
 }
 /* ---------------------------------------------------------------------------------Animations */
-

@@ -1,4 +1,6 @@
 <?php
-$maxq=4; // The maximum jobs to run in parallel
-$cores=exec('nproc')*4; //The amount of cores to give to each media processing job
-
+$maxq=1; // The maximum jobs to run in parallel
+$cores=exec('nproc'); //The amount of cores to give to each media processing job
+if($cores > 1){
+	$cores = $cores - 1;
+}

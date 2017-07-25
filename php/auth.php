@@ -1,7 +1,10 @@
 <?php
+ini_set("log_errors", 1);
+ini_set("error_log", $_SERVER["DOCUMENT_ROOT"]."/log/aesop.log");
+
 include_once('set.php');
 
-$uid;	
+$uid;
 
 function unique(){
 	global $dbh,$p_username,$p_usermail;
@@ -10,7 +13,7 @@ function unique(){
 		$p_usermail=$p_username;
 	}
 	$sql="SELECT (SELECT COUNT(username) FROM users WHERE username='".$p_username."') AS user, (SELECT COUNT(email) FROM users WHERE email='".$p_usermail."') AS email";
-	
+
 	$result = pg_query($dbh, $sql);
 	if (!$result) {
 		die("Error in SQL query unique: " . pg_last_error($dbh));
@@ -21,7 +24,7 @@ function unique(){
 function authtoken(){
 	$string = $_SERVER['HTTP_USER_AGENT'];
 	$string .= time();
-	return md5($string);	
+	return md5($string);
 }
 
 function login(){
@@ -51,14 +54,14 @@ function login(){
 					echo('logged in');
 				}
 			}else{
-				echo('incorrect');	
+				echo('incorrect');
 			}
 		}
-		
+
 	}else{
 		echo('Sorry, no such user or email');
 	}
-	pg_close($dbh);	
+	pg_close($dbh);
 }
 
 function randomPassword() {
@@ -84,7 +87,7 @@ function gettoken() {
 		$arr = pg_fetch_all($result);
 		echo($arr[0]['authtoken']);
 	}
-	pg_close($dbh);	
+	pg_close($dbh);
 }
 function mailuser($to,$subject,$message) {
 	global $domainname,$sitename,$uid,$token,$mess,$p_usermail;
@@ -109,13 +112,13 @@ function mailuser($to,$subject,$message) {
 			'message'=>'Further instructions have been emailed to '.$p_usermail
 		);
 		array_push ($mess,$m);
-		
+
 	}else{
 		$m=(object) array(
 			'class'=>'error',
 			'message'=>'The system failed to send an email to '.$p_usermail.'. Please set their password manually and notify them.'
 		);
-		array_push ($mess,$m);	
+		array_push ($mess,$m);
 	}
 	echo json_encode($mess);
 }
@@ -125,25 +128,25 @@ if ($data->method == 'login'){
 }
 
 if ($data->method == 'verify'){
-	gettoken(); 
+	gettoken();
 }
 if($data->method === 'newpass'){
 
 	global $dbh,$p_user,$mess, $sitename,$p_usermail,$uid,$token;
 	$mess=array();
-	
+
 	$sql="SELECT id,email from users WHERE username='".$p_user."' OR email='".$p_user."'";
 
 	$result = pg_query($dbh, $sql);
 	$arr = pg_fetch_all($result);
 
-	if(!$arr){		
+	if(!$arr){
 		$m=(object) array(
 			'class'=>'error',
 			'message'=>'There is no such user or email address'
 		);
 		array_push ($mess,$m);
-		echo json_encode($mess);		
+		echo json_encode($mess);
 	}else{
 		$token=authtoken();
 		$sql="UPDATE users SET authtoken='".$token."' WHERE id=".$arr[0]['id'];
@@ -158,15 +161,15 @@ if($data->method === 'newpass'){
 if($data->method === 'newuser'){
 
 	global $dbh,$p_username,$p_usermail,$p_mess,$uid,$token,$mess;
-	$unique = unique();	
+	$unique = unique();
 	$mess=array();
 	if($unique[0]['user'] < 1 && $unique[0]['email'] < 1){
-				
+
 		$salt= uniqid(mt_rand(), true);
 		$password=randomPassword();
 		$hash = crypt($password,'$6$rounds=5000$'.$salt.'$');
 		$token=authtoken();
-		
+
 		$sql = "INSERT INTO users (username,hash,salt,email,authtoken) VALUES ('".$p_username."','".$hash."','".$salt."','".$p_usermail."','".$token."') RETURNING id";
 
 		$result = pg_query($dbh, $sql);
@@ -210,7 +213,7 @@ if($data->method === 'setpass'){
 	$salt= uniqid(mt_rand(), true);
 	$hash = crypt($p_pass,'$6$rounds=5000$'.$salt.'$');
 	$token=authtoken();
-	
+
 	$sql="UPDATE users SET hash='".$hash."', salt='".$salt."', authtoken='".$token."', verified='1' WHERE authtoken='".$p_token."' AND id=".$p_uid;
 
 	$result = pg_query($dbh, $sql);

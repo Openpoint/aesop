@@ -13,11 +13,11 @@
 		<div id='notification' ng-if='size(notification.message) > 0 && !modal.show_modal' ng-click='notice("clear")'>
 			<div ng-repeat="mes in notification.message" ng-class="mes.class" class='bubb'>
 				{{mes.message}}
-			</div>					
+			</div>
 		</div>
 		<!--users -->
 		<div id='adminusers' ng-if='c_admin.subcontext==="users"' ng-controller='adminusers'>
-			
+
 			<form name='adduser' ng-submit="newuser()" novalidate>
 				<h1>Invite a new user</h1>
 				<div  class='infield'>
@@ -25,7 +25,7 @@
 					<label for="newuser" ng-if="!newusername" >New user name</label>
 				</div>
 				<div  class='infield'>
-					<input id='usermail' type='email' ng-model="newusermail" placeholder="NEW USER EMAIL" size='38' required />					
+					<input id='usermail' type='email' ng-model="newusermail" placeholder="NEW USER EMAIL" size='38' required />
 				</div>
 				<textarea ng-model="mailmessage" placeholder="Personalised message (optional)"></textarea>
 				<div>
@@ -40,9 +40,9 @@
 		<!--job queue -->
 		<div id='adminjobs' ng-if='c_admin.subcontext==="jobs"'>
 			<h1 ng-if='
-			c_admin.queue.running.length===0 && 
-			c_admin.queue.queued.length===0 && 
-			c_admin.queue.error.length===0 && 
+			c_admin.queue.running.length===0 &&
+			c_admin.queue.queued.length===0 &&
+			c_admin.queue.error.length===0 &&
 			c_admin.queue.complete.length===0
 			'>There are no active jobs.</h1>
 			<!--running -->
@@ -50,15 +50,15 @@
 				<h1>Jobs that are runnng:</h1>
 				<div class='bubb message' ng-repeat="item in c_admin.queue.running">
 					<div class='cntr'>
-						<div ng-click="del_r(item.type,item.sid,item.pid,item.chid)">Cancel</div>
+						<div ng-click="del_r(item.type,item.sid,item.pid,item.chid);kill_r(item.prid)">Cancel</div>
 					</div>
 					<h2>{{item.sid | storyname:storynames}}</h2>
 
 					<div>{{item.type | jobtype}} : Chapter {{item.corder*1+1}}, Page {{item.porder*1+1}}</div>
-					<div>{{item.title}}</div><br>						
+					<div>{{item.title}}</div><br>
 					<div>Started: <span am-time-ago="item.time"></span></div>
 					<div ng-repeat="mess in item.message">- {{mess}} <span ng-class="{'spinner': $last}"></span></div>
-					
+
 				</div>
 			</div>
 			<!--queued -->
@@ -104,7 +104,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 		<div class='closer' ng-click='c_admin.context=null'>X</div>
 	</div>

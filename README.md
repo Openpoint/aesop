@@ -9,7 +9,7 @@ Have a look at the demo: http://story.openpoint.ie
 
 Dependencies:
 
-`sudo apt-get install mediainfo libav-tools youtube-dl imagemagick postfix npm`
+`sudo apt-get install mediainfo libav-tools python imagemagick postfix npm`
 
 Also: postgresql >=9
 
@@ -27,9 +27,10 @@ Apache2 virtualhost config to include:
     allow from all
 </Directory>
 ```
-Clone, cd into app directory and set permissions:
+Clone the repo, cd into app directory and set permissions:
+
 ```bash
-chmod 777 static/resources/poster static/resources/fvideo static/resources/timage static/resources/bvideo static/resources/fimage utils/fvideo utils/timage utils/bvideo utils/fimage
+sudo chown -R www-data:www-data static/resources utils
 ```
 
 Spin it up in a web browser and follow the install insructions

@@ -1,6 +1,6 @@
 <?php
 ini_set("log_errors", 1);
-ini_set("error_log", $_SERVER["DOCUMENT_ROOT"]."/log/aesop.log");
+ini_set("error_log", dirname(__FILE__)."/../../log/aesop.log");
 
 //create the poster directory
 if($p_type==='bvideo' || $p_type==='fvideo'){
@@ -10,44 +10,37 @@ if($p_type==='bvideo' || $p_type==='fvideo'){
 
 
 function setfile(){
-
 	global $dbh, $title, $ext, $sandbox, $context, $starttime, $endtime, $p_vidi, $vtemp, $p_type, $p_sid, $p_chid, $p_porder, $p_corder, $p_pid, $peg, $dir;
-
 	$starttime=($p_vidi->start['h']*60*60)+($p_vidi->start['m']*60)+($p_vidi->start['s']);
 	$endtime=($p_vidi->end['h']*60*60)+($p_vidi->end['m']*60)+($p_vidi->end['s']);
 
-
-
-	if(isset($p_vidi->vurl) && $p_vidi->vurl){
+	if(isset($p_vidi->vurl) && $p_vidi->vurl!=='null'){
 		viddl();
-	}else if(isset ($vtemp) && $vtemp){
+	}else if(isset($vtemp)){
 		//process uploaded media
 		$type=explode("/", $vtemp['type']);
+
 		if($type[0]==='video'||$type[0]==='audio'){
-			$ext= $type[1];
 			$title=explode(".", $vtemp['name']);
-			array_pop($title);
+			$ext = array_pop($title);
 			$title=implode('',$title);
 			$ttitle=title($title,true);
-			$title=$dir.title($title);
-
+			$title=$dir.title($title,false);
 			$orig=$sandbox.'vidlib/'.$ttitle.'.'.$ext;
-			$target=$sandbox.$p_type.'/'.$title.'.'.$ext;
 
 			// need to design client side solution to not upload file again, but use library instead
 			if(!file_exists ($orig)){
 				move_uploaded_file($vtemp['tmp_name'], $orig);
 			}
-			copy($orig,$target);
-			$cmd='chmod 774 '.$target;
-			exec($cmd);
+
+
 			//echo $orig."\n";
 			//echo $target;
 			//return;
 			$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/php/media/media2.php --peg \''.$peg.'\' --url false --command "vidprocess" --title "'.$title.'" --ttitle "'.$ttitle.'" --ext "'.$ext.'" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';
 
 			loading();
-
+			//exec($cmd);
 			queue($cmd,null,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title);
 
 		}else{
@@ -60,31 +53,16 @@ function setfile(){
 //download media from the web
 function viddl(){
 	global $title, $ext, $sandbox, $p_vidi,$starttime, $endtime, $peg, $context, $p_type, $p_sid, $p_chid, $p_porder, $p_corder, $p_pid, $dir;
-
 	$url=$p_vidi->vurl;
-	$json=exec($sandbox."youtube-dl -j -4 ".$url,$ouput,$err);
-	if($err === 0){
-		$json=json_decode($json);
-		if($json->vcodec==='none' && ($p_type==='bvideo'||$ptype==='fvideo')){
-			echo json_encode(makemess('warning',"The URL you entered does not have a downloadable video. Please try something else."));
-			return;
-		}
-		$title=$dir.title($json->title,false);
-		$ttitle=title($json->title,true);
-		$ext=$json->ext;
+	$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/php/media/media2.php --peg \''.$peg.'\' --url "'.$url.'" --command "viddl" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';
 
-		$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/php/media/media2.php --peg \''.$peg.'\' --url "'.$url.'" --command "viddl" --title "'.$title.'" --ttitle "'.$ttitle.'" --ext "'.$ext.'" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';
-		loading();
-		queue($cmd,null,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title);
-	}else{
-		echo json_encode(makemess('warning','There was a problem downloading media from '.$url.'. Please check that this is a valid URL and try again'));
-		return;
-	}
+	loading();
+	queue($cmd,null,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title);
 }
 
 
 
-//check if local version of youtube-dl exists and download if not - todo: check if latest version and update
+//check if local version of youtube-dl exists and download if not
 if(file_exists($_SERVER["DOCUMENT_ROOT"].'/utils/youtube-dl')){
 	setfile();
 }else{

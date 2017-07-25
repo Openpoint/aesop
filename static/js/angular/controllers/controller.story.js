@@ -33,7 +33,18 @@ Asp.page.story.controller('panel', ['$scope','$sce','$timeout','video',function(
 			if($scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].oaudio && $scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].oaudio !== $scope.c.oldaudio){
 					$timeout(function(){
 						Asp.media.oaudio = $('#acontrols')[0];
-						Asp.media.oaudio.load();
+
+						var srcs = $scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].oaudio;
+						var mp3 = document.createElement('source');
+						mp3.src = srcs.a_mp3;
+						mp3.type = 'audio/mpeg';
+						var ogg = document.createElement('source');
+						ogg.src = srcs.a_ogg;
+						ogg.type = 'audio/ogg';
+						Asp.media.oaudio.appendChild(mp3);
+						Asp.media.oaudio.appendChild(ogg);
+
+						//Asp.media.oaudio.load();
 						if(!$scope.muted){
 							Asp.media.oaudio.play();
 						}else{
@@ -50,21 +61,35 @@ Asp.page.story.controller('panel', ['$scope','$sce','$timeout','video',function(
 				if($scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].bvideo && $scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].bvideo !== $scope.c.oldvid){
 
 					pause();
-
+					Asp.media.bvposter=$scope.lib+"poster/"+$scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].poster.location;
+					$('#mediafocus .bvideo source').remove();
 					//Load and render the new page bvideo resource
 
 					$('#media .pimage').clone().prependTo($('#mediafocus .inner')); // copy active to top to avoid 'DOM flash' in Chrome
 					$('#media .fimage').clone().prependTo($('#mediafocus .inner'));
 					$('#media').css({opacity:0})
 					$timeout(function(){
+
 						Asp.media.bvideo = $('#mediafocus .bvideo')[0];
+						var srcs = $scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].bvideo;
+						var mp4 = document.createElement('source');
+						mp4.src = srcs.v_mp4;
+						mp4.type = 'video/mp4';
+						/*
+						var webm = document.createElement('source');
+						webm.src = srcs.v_webm;
+						webm.type = 'video/webm';
+						Asp.media.bvideo.appendChild(webm);
+						*/
+						Asp.media.bvideo.appendChild(mp4);
+
 						if($scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].bvmute){
 							Asp.media.bvideo.muted=true;
 
 						}else if(!$scope.muted){
 							Asp.media.bvideo.muted=false;
 						}
-						Asp.media.bvposter=$scope.lib+"poster/"+$scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].poster.location;
+
 						if($("#media .pimage")[0].complete){
 							setimage($("#media .pimage"));
 						}else{
@@ -83,14 +108,29 @@ Asp.page.story.controller('panel', ['$scope','$sce','$timeout','video',function(
 			}else if($scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].fvideo){
 
 				pause();
+				$('#media .video source').remove();
 				if(Asp.media.old){
 					$(Asp.media.old).prependTo('#mediafocus .inner');
 				}
 				Asp.media.old=false;
 
 				$timeout(function(){
+
 					Asp.media.fvideo=$('#media .video')[0];
 					Asp.media.fvideo.poster=$scope.lib+"poster/"+$scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].poster.location;
+
+					var srcs = $scope.all.a.resource[$scope.c.context.chid][$scope.c.context.pid].fvideo;
+					var mp4 = document.createElement('source');
+					mp4.src = srcs.v_mp4;
+					mp4.type = 'video/mp4';
+					/*
+					var webm = document.createElement('source');
+					webm.src = srcs.v_webm;
+					webm.type = 'video/webm';
+					Asp.media.fvideo.appendChild(webm);
+					*/
+					Asp.media.fvideo.appendChild(mp4);
+
 					Asp.media.fvideo.ontimeupdate=function(){
 						var p=video.reportProgress();
 						$scope.vidtime=p.vidtime;
@@ -140,7 +180,6 @@ Asp.page.story.controller('panel', ['$scope','$sce','$timeout','video',function(
 					$('#media .pimage').clone().prependTo($('#mediafocus .inner'));
 					$('#media').css({opacity:0});
 					$timeout(function(){
-						console.log($("#media .fimage")[0]);
 						if($("#media .fimage")[0].complete){
 							setimage($("#media .fimage"));
 						}else{

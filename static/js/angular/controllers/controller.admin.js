@@ -57,7 +57,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 	}
 	//reset a password from url token
 	$scope.setpass=function(){
-		console.log($scope.c_admin)
+
 		setter.setpass($scope.user.uid,$scope.user.authtoken,$scope.c_admin.pass1).then(function(data){
 			if(data==='success'){
 				$scope.modal.modals.reset=false;
@@ -107,10 +107,13 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 
 	//delete a resource from the database and filesystem
 	$scope.del_r = function(type,sid,pid,chid){
-		setter.deleteres(type,sid,pid,chid).then(function(data){
 
+		setter.deleteres(type,sid,pid,chid).then(function(data){
 			$scope.reload();
 		})
+	}
+	$scope.kill_r = function(prid){
+		setter.killprocess(prid);
 	}
 	//retry a failed job
 	$scope.retry = function(rid){
@@ -287,7 +290,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 			if (data.status == 'success'){
 
 				delete(data.status);
-				console.log(data);
+
 
 				if(data.c_order === 'undefined'){
 					data.c_order=$scope.c.context.c_order;
@@ -399,7 +402,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 
 	//the message alert system - types are message, warning, error, success
 	$scope.notice=function(type,message){
-		console.log(message);
+
 		if (type === 'clear'){
 			$scope.notification.message={};
 		}else{
@@ -644,7 +647,7 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 			// get thumbnail preview
 
 			if (window.FileReader && thisfile[0].type.indexOf('image') > -1) {
-				console.log('thumb');
+
 				var fileReader = new FileReader();
 				fileReader.readAsDataURL(thisfile[0]);
 				var loadFile = function(fileReader) {
@@ -661,10 +664,6 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 
 	//start the file upload
 	$scope.start = function(subcontext,scrape) {
-
-		//$scope.c_admin.subcontext=subcontext;
-		console.log(scrape);
-		console.log($scope.placeholder[$scope.c_admin.subcontext]);
 
 		if(!scrape){
 			var file=$scope.placeholder[$scope.c_admin.subcontext].selectedFiles[0];
@@ -683,13 +682,14 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 			'type': $scope.c_admin.subcontext,
 			'vidi' : $scope.placeholder[$scope.c_admin.subcontext].vidi
 		}
+		console.log(fields);
 		$scope.up=Upload.upload({
 			url : '/php/connect.php',
 			method: 'POST',
 			fields : fields,
 			file: file
 		}).then(function(data){
-			console.log(data)
+
 			$scope.notification.message=data.data;
 			if(data.data[0].class==='success'){
 				$scope.placeholder[$scope.c_admin.subcontext]={};

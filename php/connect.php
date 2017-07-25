@@ -1,13 +1,7 @@
 <?php
+include_once('set.php');
 ini_set("log_errors", 1);
 ini_set("error_log", $_SERVER["DOCUMENT_ROOT"]."/log/aesop.log");
-
-
-include_once('set.php');
-if($data->method === 'fileup'){
-	error_log('connect.php');
-	error_log(print_r($data,true));
-}
 
 if(isset($_COOKIE["auth"])){
 	$cookie=json_decode($_COOKIE["auth"]);
@@ -26,18 +20,7 @@ $sandbox=$_SERVER["DOCUMENT_ROOT"].'/utils/';
 $context=$_SERVER["DOCUMENT_ROOT"].'/static/resources/'; //create the base path for file uploads
 $mtypes=['bvideo','fvideo','fimage','foverlay','oaudio','poster','timage'];
 
-//helper to sanitize titles
-function title($tit,$notime){
 
-	global $starttime, $endtime;
-	$title = str_replace(' ','-',$tit);
-	$title = preg_replace('/[^A-Za-z0-9\-]/', '', $title);
-	if(!$notime){
-		return $title.'_'.$starttime.'_'.$endtime;
-	}else{
-		return $title;
-	}
-}
 
 //Process file uploads
 
@@ -46,9 +29,9 @@ if($data->method === 'fileup'){
 	global $dbh, $p_type, $p_sid, $p_pid, $p_chid, $vtemp, $context, $dir;
 
 	$dir=$p_sid.'/'.$p_chid.'/'.$p_pid.'/'; //create the path for data store file uploads
-	$cmd='mkdir -p '.$context.$p_type.'/'.$dir.';chmod -R 774 '.$context.$p_type.';mkdir -p '.$sandbox.$p_type.'/'.$dir.';chmod -R 774 '.$sandbox.$p_type;
+	$cmd='mkdir -p '.$context.$p_type.'/'.$dir;
 
-	exec($cmd); //create the destination and sandbox directories
+	exec($cmd); //create the destination directories
 
 	//peg gets passed to <asyncmediaprocessor>.php in a BASH param
 	$peg=(object)array(
@@ -58,9 +41,9 @@ if($data->method === 'fileup'){
 		"chid"=>$p_chid
 	);
 	$peg=json_encode($peg);
-	$p_vidi = (object) $data->vidi;
-
-	error_log(print_r($_FILES,true));
+	if(isset($p_vidi)){
+		$p_vidi = (object) $p_vidi;
+	}
 
 	//return a error if there was a problem with the file upload
 	if (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
@@ -70,8 +53,7 @@ if($data->method === 'fileup'){
 		//continue processing the file
 		if($p_type==='fvideo' || $p_type==='bvideo' || $p_type==='oaudio'){ //handle for videos and audio
 
-			error_log(print_r($p_vidi,true));
-			if(!$p_vidi->vurl){
+			if($p_vidi->vurl==='null'){
 				$vtemp=$_FILES['file'];
 			}
 			include('media/media.php');
@@ -79,30 +61,27 @@ if($data->method === 'fileup'){
 		}
 		if($p_type==='timage' || $p_type==='fimage' || $p_type==='foverlay'){ //handle for images
 
-			$filename=$_FILES['file']['name'];
-			$title=explode(".", $filename);
-			array_pop($title);
+
+			$title=explode(".",$_FILES['file']['name']);
+			$ext = array_pop($title);
 			$title=implode('',$title);
 			$title=title($title,true);
 			$title=$dir.$title;
 
 
-			$source=$sandbox.$p_type.'/'.$dir.$filename;
+
 			if($p_type==='foverlay'){
 				$target=$context.$p_type.'/'.$title.'.png';
 			}else{
 				$target=$context.$p_type.'/'.$title.'.jpg';
 			}
-
+			$source=$context.$p_type.'/'.$title.'_temp'.$ext;
 			$upload=(move_uploaded_file($_FILES['file']['tmp_name'], $source));
 			if($upload){
-				$cmd='chmod 774 '.$source;
-				exec($cmd);
 				if($p_type==='timage'){
 					$cmd='convert "'.$source.'" -resize 960 -quality 80 '.$target;
-
 					exec($cmd);
-
+					unlink($source);
 				}
 				if($p_type==='fimage' || $p_type==='foverlay'){
 					$cmd='convert "'.$source.'" -ping -format %w info:';
@@ -112,8 +91,8 @@ if($data->method === 'fileup'){
 					}else{
 						$cmd='convert -quality 80 "'.$source.'" '.$target;
 					}
-					$cmd=$cmd.';rm -r '.$sandbox.$p_type.'/'.$dir;
 					exec($cmd);
+					unlink($source);
 				}
 
 				if($p_type==='foverlay'){
@@ -134,70 +113,67 @@ if($data->method === 'fileup'){
 
 	}
 }
-
+if($data->method === 'killprocess'){
+	global $p_prid;
+	$child1 = exec('pgrep -P '.$p_prid);
+	$child2 = exec('pgrep -P '.$child1);
+	exec('kill -TERM '.$child2);
+	exec('kill -TERM '.$child1);
+	exec('kill -TERM '.$p_prid);
+}
 //delete a static resource
 if($data->method === 'delres'){
-
 	global $dbh, $p_type, $p_sid, $p_pid, $p_chid;
-
+	if(!($p_type==='timage' && $p_pid==-2)){
+		$sql = "DELETE FROM resource WHERE type = '".$p_type."' AND sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid.";";
+		commit($sql);
+	}
+	//echo $sql."\n";
+	$dir = $context.$p_type.'/'.$p_sid.'/'.$p_chid.'/'.$p_pid;
+	$files = array_diff(scandir($dir),array('..', '.'));
+	if($p_type==='bvideo' || $p_type==='fvideo'){
+		$sql = "DELETE FROM resource WHERE type = 'poster' AND sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid.";";
+		pg_query($dbh, $sql);
+		$pdir=$context.'poster/'.$p_sid.'/'.$p_chid.'/'.$p_pid;
+		$pfiles = array_diff(scandir($pdir),array('..', '.'));
+		foreach($pfiles as $file){
+			unlink($pdir.'/'.$file);
+		}
+		rmdir($pdir);
+		$pdir=$context.'poster/'.$p_sid.'/'.$p_chid;
+		$pfiles = array_diff(scandir($pdir),array('..', '.'));
+		if(!count($pfiles)){
+			rmdir($pdir);
+			$pdir=$context.'poster/'.$p_sid;
+			$pfiles = array_diff(scandir($pdir),array('..', '.'));
+			if(!count($pfiles)){
+				rmdir($pdir);
+			}
+		}
+		delq();
+	}
 	if($p_type==='timage' && $p_pid==-2){
-		$sql = "SELECT location FROM story WHERE sid = ".$p_sid;
-
-	}else{
-		$sql = "DELETE FROM resource WHERE type = '".$p_type."' AND sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid." RETURNING *;";
+		$sql="UPDATE story SET location = NULL WHERE sid = ".$p_sid;
+		commit($sql);
 	}
-	echo $sql."\n";
-	$result = pg_query($dbh, $sql);
-	if (!$result) {
-		echo json_encode(pg_last_error($dbh));
-	}else{
-		$arr = pg_fetch_all($result);
-		if($p_type==='bvideo' || $p_type==='fvideo'){
-			foreach ($arr as $item){
-				if($item['v_webm']!=='loading.webm' && $item['v_mp4']!=='loading.mp4'){
-					$path = $context.$p_type.'/'.$item['v_webm'];
-					unlink($path);
-					$path = $context.$p_type.'/'.$item['v_mp4'];
-					unlink($path);
-				}
-			}
-			$sql = "DELETE FROM resource WHERE type = 'poster' AND sid = ".$p_sid." AND chid = ".$p_chid." AND pid = ".$p_pid." RETURNING location;";
-			$result = pg_query($dbh, $sql);
-			if ($result) {
-				$arr = pg_fetch_all($result);
-				foreach ($arr as $item){
-					if($item['location']!=='loading.jpg'){
-						$path = $context.'poster/'.$item['location'];
-						unlink($path);
-					}
-				}
-				delq();
-				return;
-			}
-		}
-		if($p_type==='fimage' || $p_type==='foverlay' || $p_type==='timage'){
-			foreach ($arr as $item){
-				$path = $context.$p_type.'/'.$item['location'];
-				unlink($path);
-			}
-			if($p_type==='timage' && $p_pid==-2){
-				$sql="UPDATE story SET location = NULL WHERE sid = ".$p_sid;
-				commit($sql);
-			}
-		}
-		if($p_type==='oaudio'){
-			foreach ($arr as $item){
-				if($item['a_mp3']!=='loading.mp3' && $item['a_ogg']!=='loading.ogg'){
-					$path = $context.$p_type.'/'.$item['a_mp3'];
-					unlink($path);
-					$path = $context.$p_type.'/'.$item['a_ogg'];
-					unlink($path);
-					delq();
-				}
-			}
-		}
-
+	if($p_type==='oaudio'){
+		delq();
 	}
+	foreach($files as $file){
+		unlink($dir.'/'.$file);
+	}
+	rmdir($dir);
+	$dir = $context.$p_type.'/'.$p_sid.'/'.$p_chid;
+	$files = array_diff(scandir($dir),array('..', '.'));
+	if(!count($files)){
+		rmdir($dir);
+		$dir = $context.$p_type.'/'.$p_sid;
+		$files = array_diff(scandir($dir),array('..', '.'));
+		if(!count($files)){
+			rmdir($dir);
+		}
+	}
+	return;
 }
 if($data->method === 'validate' && $authorised){
 	echo('valid');
@@ -558,7 +534,7 @@ if($data->method == 'order'){
 if($data->method === 'getqueue'){
 	global $dbh,$p_uid;
 
-	$sql = "SELECT type,sid,porder,corder,pid,chid,status,time,title,array_to_json(message) AS message FROM queue WHERE NOT (".$p_uid." = ANY (seen)) ORDER BY time ASC;";
+	$sql = "SELECT prid,type,sid,porder,corder,pid,chid,status,time,title,array_to_json(message) AS message FROM queue WHERE NOT (".$p_uid." = ANY (seen)) ORDER BY time ASC;";
 
 	$result = pg_query($dbh, $sql);
 	if (!$result) {
@@ -601,9 +577,7 @@ if($data->method === 'switcher'){
 	$cmd='
 	mkdir -p '.$context.$newtype.$path.';
 	mv '.$context.$p_type.$path.'/* '.$context.$newtype.$path.';
-	rm '.$context.$p_type.$path.';
-	chmod -R 774 '.$context.$newtype;
-	echo $cmd;
+	rm '.$context.$p_type.$path;
 	exec($cmd);
 }
 if($data->method === 'users'){

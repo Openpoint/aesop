@@ -25,7 +25,6 @@ Asp.page.story=angular.module('story', [])
 	}
 	if(page.request=='embedded'){ //log user out if story is being accessed through an iframe embed
 		$scope.locate.embedded=true;
-
 		$scope.c.logout();
 	}
 
@@ -160,6 +159,7 @@ Asp.page.story=angular.module('story', [])
 
 
 						//----------- Just about done and ready to render ----------//
+	
 						$scope.all.a=data;
 						$scope.c.iready=true; //remove the loading overlay
 
@@ -230,6 +230,7 @@ Asp.page.story=angular.module('story', [])
 	}
 	//menu page switcher
 	$scope.all.go = function(sid,corder,porder,chid,pid,level){
+
 		if(level=='top' && $scope.isTouch){
 			return;
 		}else{
