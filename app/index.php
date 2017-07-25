@@ -7,10 +7,10 @@
 	<title>Dev</title>
 	<base href="/">
 	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="/static/css/normalize.css"/>
-	<link rel="stylesheet" href="/static/css/fontello.css"/>
-	<link rel="stylesheet" href="/static/css/app.css"/>
-	<link rel="stylesheet" href="/static/css/fluidmedia.css"/>
+	<link rel="stylesheet" href="static/css/normalize.css"/>
+	<link rel="stylesheet" href="static/css/fontello.css"/>
+	<link rel="stylesheet" href="static/css/app.css"/>
+	<link rel="stylesheet" href="static/css/fluidmedia.css"/>
 	<script language="javascript" type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/imagesloaded/imagesloaded.pkgd.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/jquery-mousewheel/jquery.mousewheel.js"></script>
@@ -19,16 +19,16 @@
 <body>
 	<?php
 
-		if(!file_exists($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
+		if(!file_exists('../settings.php')){
 			header('Location: install/install.php');
 			exit;
 		}
-		include($_SERVER["DOCUMENT_ROOT"].'/settings.php');
+		include_once('../settings.php');
 		if(!isset($installed)){
 			header('Location: install/install.php');
 			exit;
 		}
-		if(is_writable($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
+		if(is_writable('../settings.php')){
 			die('<div class="container">Please remove write permissions from '.$_SERVER["DOCUMENT_ROOT"].'/settings.php and reload the page</div>');
 		}
 		if(isset($_GET['method']) && $_GET['method']==='setpass'){
@@ -41,7 +41,6 @@
 				<div ng-controller='admin' id='admin' class='admin'>
 					<div  ng-if='user.authorised'>
 						<div class='topmen'>
-
 							<ul class='activities'>
 								<li ng-click="add('add',null)" ng-class="{'active' : c_admin.context=='add'}">NEW</li>
 								<li ng-click="add('help',null)" ng-class="{'active' : c_admin.context=='help'}" ng-if='all.a.story.sid'>Help</li>
@@ -61,15 +60,15 @@
 							<div class='clearfix'></div>
 						</div>
 						<div id='adminwrap' ng-show="c_admin.context && c_admin.context !== 'admin'" style="width:{{width+style.extra}}px">
-							<?php include("static/html/includes/admin.php") ?>
+							<?php include("./static/html/includes/admin.php") ?>
 						</div>
-						<?php include("static/html/includes/admin2.php") ?>
+						<?php include("./static/html/includes/admin2.php") ?>
 					</div>
 					<div id = 'modal' class='modal' ng-show='modal.show_modal' ng-click='modal.toggle()'>
 						<div class='inner'>
 							<div class='content' ng-click='$event.stopPropagation()'>
 								<?php
-									include('static/html/includes/modals.html');
+									include('./static/html/includes/modals.html');
 								?>
 							</div>
 						</div>
@@ -101,21 +100,21 @@
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-route/angular-route.min.js"></script>
-	<script language="javascript" type="text/javascript" src="/aesop.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/js/angular/services/services.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/js/angular/factories/factory.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/js/angular/filters/filters.js"></script>
+	<script language="javascript" type="text/javascript" src="aesop.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/services/services.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/factories/factory.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/filters/filters.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-animate/angular-animate.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-cookies/angular-cookies.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/moment/moment.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-moment/angular-moment.js"></script>
 
-	<script language="javascript" type="text/javascript" src="/static/js/angular/home.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/js/angular/story.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/home.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/story.js"></script>
 
-	<script language="javascript" type="text/javascript" src="/static/js/angular/controllers/controller.admin.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/js/angular/controllers/controller.story.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/js/angular/animations/animations.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/controllers/controller.admin.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/controllers/controller.story.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/angular/animations/animations.js"></script>
 
 </body>
 </html>

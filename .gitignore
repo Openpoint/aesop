@@ -3,6 +3,5 @@ logs
 *.log
 !.gitignore
 utils/youtube-dl
-node_modules
+app/node_modules
 scrap
-

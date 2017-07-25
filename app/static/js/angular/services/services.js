@@ -5,42 +5,42 @@ Aesop.service('getter',function($q,$http,$rootScope) {
 	return{
 		all : function(sid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'getall','sid':sid}).then(function(data) {
+			$http.post('handler.php', {'method':'getall','sid':sid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		sid : function(title){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'getsid','title':title}).then(function(data) {
+			$http.post('handler.php', {'method':'getsid','title':title}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		storylist : function(){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'getstories'}).then(function(data) {
+			$http.post('handler.php', {'method':'getstories'}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		getqueue: function(uid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'getqueue','uid':uid}).then(function(data) {
+			$http.post('handler.php', {'method':'getqueue','uid':uid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		poller: function(uid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'poller'}).then(function(data) {
+			$http.post('handler.php', {'method':'poller'}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		users: function(){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'users'}).then(function(data) {
+			$http.post('handler.php', {'method':'users'}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
@@ -53,39 +53,39 @@ Aesop.service('setter',function($q,$http,$rootScope) {
 	return{
 		add : function(method,title,sid,chid,pid,corder,porder){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'title':title,'method':'new_'+method,'sid':sid,'chid':chid,'pid':pid,'corder':corder,'porder':porder}).then(function(data) {
+			$http.post('handler.php', {'title':title,'method':'new_'+method,'sid':sid,'chid':chid,'pid':pid,'corder':corder,'porder':porder}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		deletestory : function(sid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'delstory','sid':sid}).then(function(data) {
+			$http.post('handler.php', {'method':'delstory','sid':sid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		deletechapter : function(corder,chid,sid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'delchap','corder':corder,'chid':chid,'sid':sid}).then(function(data) {
+			$http.post('handler.php', {'method':'delchap','corder':corder,'chid':chid,'sid':sid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		deletepage : function(porder,pid,chid,sid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'delpage','porder':porder,'pid':pid,'chid':chid,'sid':sid}).then(function(data) {
+			$http.post('handler.php', {'method':'delpage','porder':porder,'pid':pid,'chid':chid,'sid':sid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		killprocess : function(prid){
 			console.error(prid);
-			$http.post('../php/connect.php', {'method':'killprocess','prid':prid})
+			$http.post('handler.php', {'method':'killprocess','prid':prid})
 		},
 		deleteres : function(type,sid,pid,chid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'delres','type':type,'sid':sid,'pid':pid,'chid':chid}).then(function(data) {
+			$http.post('handler.php', {'method':'delres','type':type,'sid':sid,'pid':pid,'chid':chid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
@@ -101,59 +101,59 @@ Aesop.service('setter',function($q,$http,$rootScope) {
 				var post={'method':'edit','type':type,'page_title':page_title,'page_text':page_text,'page_menshow':page_menshow,'sid':context.sid,'chid':context.chid,'pid':context.pid,'porder':context.p_order,'corder':context.c_order};
 			}
 			var defer = $q.defer();
-			$http.post('../php/connect.php',post).then(function(data) {
+			$http.post('handler.php',post).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		redit : function(type, element, value, context){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'redit','value':value,'type':type,'element':element,'sid':context.sid,'chid':context.chid,'pid':context.pid,'porder':context.p_order,'corder':context.c_order}).then(function(data) {
+			$http.post('handler.php', {'method':'redit','value':value,'type':type,'element':element,'sid':context.sid,'chid':context.chid,'pid':context.pid,'porder':context.p_order,'corder':context.c_order}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		order : function(direction, position, context, sid, chid, pid,swap){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'order','direction':direction,'position':position,'context':context,'sid':sid,'chid':chid,'pid':pid,'swap':swap}).then(function(data) {
+			$http.post('handler.php', {'method':'order','direction':direction,'position':position,'context':context,'sid':sid,'chid':chid,'pid':pid,'swap':swap}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		seenqueue: function(uid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'seenqueue','uid':uid}).then(function(data) {
+			$http.post('handler.php', {'method':'seenqueue','uid':uid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		retry: function(rid){
-			$http.post('../php/connect.php', {'method':'seenqueue','rid':rid});
+			$http.post('handler.php', {'method':'seenqueue','rid':rid});
 		},
 		switcher: function(type,sid,chid,pid){
 			var defer = $q.defer();
-			$http.post('../php/connect.php', {'method':'switcher','type':type,'sid':sid,'chid':chid,'pid':pid}).then(function(data) {
+			$http.post('handler.php', {'method':'switcher','type':type,'sid':sid,'chid':chid,'pid':pid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		newuser: function(name,email,mess){
 			var defer = $q.defer();
-			$http.post('../php/auth.php', {'method':'newuser','username':name,'usermail':email,'mess':mess}).then(function(data) {
+			$http.post('ahandler.php', {'method':'newuser','username':name,'usermail':email,'mess':mess}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		setpass: function(uid,token,pass){
 			var defer = $q.defer();
-			$http.post('../php/auth.php', {'method':'setpass','uid':uid,'token':token,'pass':pass}).then(function(data) {
+			$http.post('ahandler.php', {'method':'setpass','uid':uid,'token':token,'pass':pass}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
 		},
 		newpass: function(user){
 			var defer = $q.defer();
-			$http.post('../php/auth.php', {'method':'newpass','user':user}).then(function(data) {
+			$http.post('ahandler.php', {'method':'newpass','user':user}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
@@ -168,7 +168,7 @@ Aesop.service('auth',function($q,$http,$rootScope) {
 		login : function(user,password){
 
 			var defer = $q.defer();
-			$http.post('../php/auth.php', {'method':'login','username':user,'password':password}).then(function(data) {
+			$http.post('ahandler.php', {'method':'login','username':user,'password':password}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;
@@ -176,7 +176,7 @@ Aesop.service('auth',function($q,$http,$rootScope) {
 		},
 		verify : function(uid){
 			var defer = $q.defer();
-			$http.post('../php/auth.php', {'method':'verify','uid':uid}).then(function(data) {
+			$http.post('ahandler.php', {'method':'verify','uid':uid}).then(function(data) {
 				defer.resolve(data.data);
 			});
 			return defer.promise;

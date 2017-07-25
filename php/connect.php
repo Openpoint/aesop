@@ -7,7 +7,7 @@ if(isset($_COOKIE["auth"])){
 	$cookie=json_decode($_COOKIE["auth"]);
 }
 if(isset($cookie->uid)){
-	include('auth.php');
+	include_once('auth.php');
 	$token=gettoken($cookie->uid);
 	if($token == $cookie->authtoken){
 		$authorised = true;
@@ -56,7 +56,7 @@ if($data->method === 'fileup'){
 			if($p_vidi->vurl==='null'){
 				$vtemp=$_FILES['file'];
 			}
-			include('media/media.php');
+			include_once('media/media.php');
 			return;
 		}
 		if($p_type==='timage' || $p_type==='fimage' || $p_type==='foverlay'){ //handle for images

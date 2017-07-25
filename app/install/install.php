@@ -9,22 +9,22 @@ if(!file_exists($_SERVER["DOCUMENT_ROOT"].'/settings.php')){
 	require($_SERVER["DOCUMENT_ROOT"].'/settings.php');
 	if(isset($installed)){
 		header('Location: /');
-		exit;		
+		exit;
 	}
 	if(isset($db)){
-		$conn_string = "host=".$db->host." port=".$db->port." dbname=".$db->name." user=".$db->user." password=".$db->pass;	
+		$conn_string = "host=".$db->host." port=".$db->port." dbname=".$db->name." user=".$db->user." password=".$db->pass;
 		$dbh = pg_connect($conn_string);
 		$dbconn = true;
-		
+
 	}
 }
 if(isset($_POST['database'])) {
-	//get the domain name for email invites 
+	//get the domain name for email invites
 	$domainname=$_SERVER['HTTP_HOST'];
 	$domainname=explode('.',parse_url($domainname)['path']);
 	array_shift($domainname);
 	$domainname=implode(".",$domainname);
-	
+
 	$conn_string = "host=".$_POST['dbloc']." port=".$_POST['dbport']." dbname=".$_POST['dbname']." user=".$_POST['dbuser']." password=".$_POST['dbpass'];
 	$dbh = pg_connect($conn_string);
 	if (!$dbh) {
@@ -37,7 +37,7 @@ if(isset($_POST['database'])) {
 	'host'=>'".$_POST['dbloc']."',
 	'user'=>'".$_POST['dbuser']."',
 	'port'=>'".$_POST['dbport']."',
-	'pass'=>'".$_POST['dbpass']."'		
+	'pass'=>'".$_POST['dbpass']."'
 ); \n
 ?>";
 		file_put_contents($_SERVER["DOCUMENT_ROOT"].'/settings.php',$tofile,FILE_APPEND);
@@ -47,7 +47,7 @@ if(isset($_POST['database'])) {
 			die(json_encode(pg_last_error($dbh)));
 		}else{
 			sleep(5);
-			header('Location:'.$_SERVER['PHP_SELF']);			
+			header('Location:'.$_SERVER['PHP_SELF']);
 			exit;
 		}
 	}
@@ -55,7 +55,7 @@ if(isset($_POST['database'])) {
 if(isset($_POST['superuser'])) {
 	if($_POST['upass1']!==$_POST['upass2']){
 		$passerr='nomatch';
-	}else{ 
+	}else{
 		$lines = file($_SERVER["DOCUMENT_ROOT"].'/settings.php');
 		array_pop($lines);
 		$tofile = join('', $lines)."
@@ -63,7 +63,7 @@ if(isset($_POST['superuser'])) {
 \$installed=true;\n
 ?>";
 		file_put_contents($_SERVER["DOCUMENT_ROOT"].'/settings.php',$tofile);
-		include($_SERVER["DOCUMENT_ROOT"]."/php/auth.php");
+		include("../../php/auth.php");
 		$salt= uniqid(mt_rand(), true);
 		$hash = crypt($_POST['upass1'],'$6$rounds=5000$'.$salt.'$');
 		$token=authtoken();
@@ -78,7 +78,7 @@ if(isset($_POST['superuser'])) {
 			header('Location: /');
 			exit;
 		}
-	}		
+	}
 }
 ?>
 
@@ -133,8 +133,8 @@ if(isset($_POST['superuser'])) {
 			<div class='midmess'>Please give your project a name. This will be used in outgoing mail subjects.</div>
 			<input type='text' value='' placeholder="Project Name" name="pname" required size='40' /><br>
 			<input type='submit' name="superuser" value='save' />
-		</form>		
-	<?php } 
+		</form>
+	<?php }
 		if(isset($dbconn) && $dbconn==='fail'){
 			echo "<div class='error'>The connection details are incorrect. Please try again.</div>";
 		}
