@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="/static/css/fluidmedia.css"/>
 	<script language="javascript" type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/imagesloaded/imagesloaded.pkgd.min.js"></script>
-	<script language="javascript" type="text/javascript" src="node_modules/jquery.mousewheel/jquery.mousewheel.js"></script>
+	<script language="javascript" type="text/javascript" src="node_modules/jquery-mousewheel/jquery.mousewheel.js"></script>
 </head>
 
 <body>
