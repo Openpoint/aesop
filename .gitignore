@@ -1,5 +1,6 @@
 settings.php
 *.log
+!log
 !.gitignore
 utils/youtube-dl
 app/node_modules
