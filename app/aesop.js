@@ -1,5 +1,10 @@
 'use strict';
 
+$.ajaxSetup({
+    headers : {
+        'CsrfToken': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 
 var Asp={
 	page:{},
@@ -17,6 +22,9 @@ var Aesop=angular.module('Aesop', [
 	'home',
 	'story'
 ])
+.run(function($http){
+	$http.defaults.headers.post.CsrfToken = $('meta[name="csrf-token"]').attr('content');
+})
 .config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
 	$routeProvider.when(
 		'/', {

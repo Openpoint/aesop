@@ -1,8 +1,38 @@
 <!doctype html>
+
+<?php
+	session_start();
+	if (empty($_SESSION['token'])) {
+		if (function_exists('mcrypt_create_iv')) {
+			$_SESSION['token'] = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+		}else{
+			$_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(32));
+		}
+	}
+	$token = $_SESSION['token'];
+
+	if(!file_exists('../settings.php')){
+		header('Location: install/install.php');
+		exit;
+	}
+	include_once('../settings.php');
+	if(!isset($installed)){
+		header('Location: install/install.php');
+		exit;
+	}
+	if(is_writable('../settings.php')){
+		die('<div class="container">Please remove write permissions from /settings.php and reload the page</div>');
+	}
+	if(isset($_GET['method']) && $_GET['method']==='setpass'){
+		setcookie('user','{"uid":"'.$_GET['uid'].'","authtoken":"'.$_GET['token'].'","method":"reset"}',0,'/');
+	}
+?>
+	
 <html lang="en" ng-app="Aesop">
 <head>
 	<link rel="icon" type="image/png" href="">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+	<meta name="csrf-token" content="<?= $token ?>">
 	<meta charset="utf-8">
 	<title>Dev</title>
 	<base href="/">
@@ -17,24 +47,7 @@
 </head>
 
 <body>
-	<?php
-		$belongsto = 'aesop';
-		if(!file_exists('../settings.php')){
-			header('Location: install/install.php');
-			exit;
-		}
-		include_once('../settings.php');
-		if(!isset($installed)){
-			header('Location: install/install.php');
-			exit;
-		}
-		if(is_writable('../settings.php')){
-			die('<div class="container">Please remove write permissions from /settings.php and reload the page</div>');
-		}
-		if(isset($_GET['method']) && $_GET['method']==='setpass'){
-			setcookie('user','{"uid":"'.$_GET['uid'].'","authtoken":"'.$_GET['token'].'","method":"reset"}',0,'/');
-		}
-	?>
+
 	<div id='mainwrapper' ng-controller="common">
 		<div ng-hide='portrait'>
 			<div id='maininner'>

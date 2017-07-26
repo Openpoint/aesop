@@ -27,10 +27,16 @@ Apache2 virtualhost config to include:
     allow from all
 </Directory>
 ```
-Clone the repo, cd into app directory and set permissions:
+Clone the repo, cd into root directory and set permissions:
 
 ```bash
 sudo chown -R www-data:www-data app/static/resources utils log
+```
+Install the dependecies:
+
+```bash
+cd app
+npm install
 ```
 
 Spin it up in a web browser and follow the install insructions

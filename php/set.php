@@ -127,8 +127,6 @@ function qprocess(){
 					$slots--;
 					$cmd=$item['command'];
 					exec($cmd,$prid);
-					error_log(print_r($prid,true));
-					//exec($cmd);
 					$sql="UPDATE queue SET  prid=".$prid[0].", status='running' WHERE qid=".$item['qid']*1;
 					commit($sql);
 				}else{

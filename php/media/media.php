@@ -5,7 +5,6 @@ ini_set("error_log", "../log/aesop.log");
 //create the poster directory
 if($p_type==='bvideo' || $p_type==='fvideo'){
 	$cmd='mkdir -p '.$context.'poster/'.$dir;
-	error_log($cmd);
 	exec($cmd);
 }
 

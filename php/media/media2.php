@@ -71,12 +71,9 @@ function viddl(){
 
 	//only download if file has not been downloaded before
 	if(!file_exists ($download)){
-		$cmd=$sandbox.'youtube-dl -4 --no-playlist --playlist-items 1 -o "'.$download.'" "'.$url.'"';
-		
+		$cmd=$sandbox.'youtube-dl -4 --no-playlist --playlist-items 1 -o "'.$download.'" "'.$url.'"';	
 		$sql = "UPDATE queue SET message = array_append(message, 'Downloading the media')  WHERE sid=".$peg->sid." AND chid=".$peg->chid." AND pid=".$peg->pid." AND type='".$peg->type."'";
-		commit($sql);
-		echo 'Downloading Video';
-		error_log($cmd);
+		commit($sql);	
 		exec($cmd);
 	}
 	vidprocess();
@@ -101,9 +98,6 @@ function vidprocess(){
 	}
 	$vinfo=exec($vinfo);
 	$vinfo=json_decode($vinfo);
-
-
-	//$vinfo->ratio=$vinfo->height/$vinfo->width;
 	$vinfo->duration=floor($vinfo->duration/1000);
 	$vinfo->size = $vinfo->width*$vinfo->height;
 	$vinfo->ratio = $vinfo->height/$vinfo->width;
@@ -114,6 +108,8 @@ function vidprocess(){
 		$vinfo->newwidth = $vinfo->width;
 		$vinfo->newheight = $vinfo->height;
 	}
+	
+
 
 	//Process the video time slices into hh:mm:ss format
 
@@ -141,7 +137,7 @@ function vidprocess(){
 	}
 	$endtime = maketime($endtime);
 
-	$target=$context.$peg->type.'/'.$title.'_temp.'.$ext;
+	
 	$title=$title.'_cropped';
 	if($peg->type==='bvideo' || $peg->type==='fvideo'){
 		$sql = "UPDATE queue SET message = array_append(message, 'Converting video - this could take a while'), title = '".$title.".mp4'  WHERE sid=".$peg->sid." AND chid=".$peg->chid." AND pid=".$peg->pid." AND type='".$peg->type."'";
@@ -152,44 +148,50 @@ function vidprocess(){
 
 	//Slice the media at times and process
 	if(isset($endcrop)){
-		if($info[0]!=='audio'){
+		if($peg->type==='bvideo' || $peg->type==='fvideo'){
+			$target=$context.$peg->type.'/'.$title.'_temp.mp4';
 			$keyframe = 'avconv -y -i '.$source.' -vcodec copy -acodec copy -force_key_frames '.$startcrop.','.$endtime.' '.$target;
 			exec($keyframe);
-			$source = $target;
-		}
-		if($peg->type==='bvideo' || $peg->type==='fvideo'){
+			error_log($keyframe);
+			$ksource = $target;
 			$target = $context.$peg->type.'/'.$title.'.mp4';
-			$crop='avconv -y -ss '.$startcrop.' -i '.$source.' -t '.$endcrop.' -c:v libx264 -crf 28 -c:a aac -b:a 256k -strict experimental -vf "scale=w='.$vinfo->newwidth.':h='.$vinfo->newheight.'" -threads '.$cores.' '.$target;
+			$crop='avconv -y -ss '.$startcrop.' -i '.$ksource.' -t '.$endcrop.' -c:v libx264 -c:a libmp3lame -s '.$vinfo->newwidth.'X'.$vinfo->newheight.' -threads '.$cores.' '.$target;
+			error_log($crop);
 		}else{
 			$target = $context.$peg->type.'/'.$title.'.mp3';
-			$crop='avconv -y -ss '.$startcrop.' -i '.$source.' -t '.$endcrop.' -vn -b:a 128k -c:a libmp3lame '.$target;
+			$crop='avconv -y -ss '.$startcrop.' -i '.$source.' -t '.$endcrop.' -c:a libmp3lame '.$target;
 		}
 
 	}else if($starttime > 0){
-		if($info[0]!=='audio'){
-			$keyframe = 'avconv -y -i '.$source.' -vcodec copy -acodec copy -force_key_frames '.$startcrop.' '.$target;
-			exec($keyframe);
-			$source = $target;
-		}
+
 		if($peg->type==='bvideo' || $peg->type==='fvideo'){
+			$target=$context.$peg->type.'/'.$title.'_temp.mp4';
+			$keyframe = 'avconv -y -i '.$source.' -vcodec copy -acodec copy -force_key_frames '.$startcrop.' '.$target;
+			error_log($keyframe);
+			exec($keyframe);
+			$ksource = $target;
 			$target = $context.$peg->type.'/'.$title.'.mp4';
-			$crop='avconv -y -ss '.$startcrop.' -i '.$source.' -c:v libx264 -crf 28 -c:a aac -b:a 256k -strict experimental -vf "scale=w='.$vinfo->newwidth.':h='.$vinfo->newheight.'" -threads '.$cores.' '.$target;
+			$crop='avconv -y -ss '.$startcrop.' -i '.$ksource.' -c:v libx264 -c:a libmp3lame -s '.$vinfo->newwidth.'X'.$vinfo->newheight.' -threads '.$cores.' '.$target;
+			error_log($crop);
 		}else{
 			$target = $context.$peg->type.'/'.$title.'.mp3';
-			$crop='avconv -y -ss '.$startcrop.' -i '.$source.' -vn -b:a 128k -c:a libmp3lame '.$target;
+			$crop='avconv -y -ss '.$startcrop.' -i '.$source.' -c:a libmp3lame '.$target;
 		}
 
 	}else{
 		if($peg->type==='bvideo' || $peg->type==='fvideo'){
 			$target = $context.$peg->type.'/'.$title.'.mp4';
-			$crop='avconv -y -i '.$source.' -c:v libx264 -crf 28 -c:a aac -b:a 256k -strict experimental -vf "scale=w='.$vinfo->newwidth.':h='.$vinfo->newheight.'" -threads '.$cores.' '.$target;
+			$crop='avconv -y -i '.$source.' -c:v libx264 -c:a libmp3lame -s '.$vinfo->newwidth.'X'.$vinfo->newheight.' -threads '.$cores.' '.$target;
+			error_log($crop);
 		}else{
 			$target = $context.$peg->type.'/'.$title.'.mp3';
-			$crop='avconv -y -i '.$source.' -vn -b:a 128k -c:a libmp3lame '.$target;
+			$crop='avconv -y -i '.$source.' -c:a libmp3lame '.$target;
 		}
 	}
 	exec($crop,$mess,$err);
-	unlink($source);
+	if(isset($ksource)){
+		unlink($ksource);
+	}
 	if($peg->type==='bvideo' || $peg->type==='fvideo'){
 		$poster='avconv -y -i '.$target.' -vf "select=eq(n\,0)" -q:v 1 '.$context.'poster/'.$title.'.jpg';
 		exec($poster);
