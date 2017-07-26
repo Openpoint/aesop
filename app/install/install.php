@@ -1,16 +1,21 @@
 <?php
+ini_set("log_errors", 1);
+ini_set("error_log","../../log/aesop.log");
 
-if(!file_exists($_SERVER["DOCUMENT_ROOT"].'/../settings.php')){
+
+if(!file_exists('../../settings.php')){
 	die('<div class="container">Please copy /settings.php.temp to /settings.php and make it writable to start the installation</div>');
 }else{
-	if(!is_writable($_SERVER["DOCUMENT_ROOT"].'/../settings.php')){
-		die('<div class="container">Please make /settings.php writable and refresh the page to start the installation</div>');
+	include('../../settings.php');
+	if(!is_writable('../../settings.php')){	
+		if(isset($installed) && $installed){
+			header('Location: /');
+			exit;
+		}else{
+			die('<div class="container">Please make /settings.php writable and refresh the page to start the installation</div>');
+		}	
 	}
-	require($_SERVER["DOCUMENT_ROOT"].'/../settings.php');
-	if(isset($installed)){
-		header('Location: /');
-		exit;
-	}
+
 	if(isset($db)){
 		$conn_string = "host=".$db->host." port=".$db->port." dbname=".$db->name." user=".$db->user." password=".$db->pass;
 		$dbh = pg_connect($conn_string);
@@ -40,8 +45,11 @@ if(isset($_POST['database'])) {
 	'pass'=>'".$_POST['dbpass']."'
 ); \n
 ?>";
-		file_put_contents($_SERVER["DOCUMENT_ROOT"].'/../settings.php',$tofile,FILE_APPEND);
-		include('sql.php');
+		$lines = file('../../settings.php');
+		array_pop($lines);
+		$tofile = join('',$lines).$tofile;
+		file_put_contents('../../settings.php',$tofile);
+		include('./sql.php');
 		$result = pg_query($dbh, $sql);
 		if (!$result) {
 			die(json_encode(pg_last_error($dbh)));
@@ -56,14 +64,14 @@ if(isset($_POST['superuser'])) {
 	if($_POST['upass1']!==$_POST['upass2']){
 		$passerr='nomatch';
 	}else{
-		$lines = file($_SERVER["DOCUMENT_ROOT"].'/../settings.php');
+		$lines = file('../../settings.php');
 		array_pop($lines);
 		$tofile = join('', $lines)."
 \n
 \$installed=true;\n
 ?>";
-		file_put_contents($_SERVER["DOCUMENT_ROOT"].'/../settings.php',$tofile);
-		include("../../php/auth.php");
+		file_put_contents('../../settings.php',$tofile);
+		include_once('../../php/auth.php');
 		$salt= uniqid(mt_rand(), true);
 		$hash = crypt($_POST['upass1'],'$6$rounds=5000$'.$salt.'$');
 		$token=authtoken();

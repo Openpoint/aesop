@@ -4,3 +4,4 @@ $cores=exec('nproc'); //The amount of cores to give to each media processing job
 if($cores > 1){
 	$cores = $cores - 1;
 }
+?>

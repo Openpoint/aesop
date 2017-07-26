@@ -1,7 +1,5 @@
 <?php
-ini_set("log_errors", 1);
-ini_set("error_log","../log/aesop.log");
-
+error_log('auth.php');
 include_once('set.php');
 
 $uid;
@@ -224,4 +222,5 @@ if($data->method === 'setpass'){
 		echo 'success';
 	}
 }
+
 ?>

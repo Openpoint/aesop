@@ -1,9 +1,8 @@
 <?php
-ini_set("log_errors", 1);
-ini_set("error_log", "../log/aesop.log");
 
-require_once('../settings.php');
+error_log('set.php');
 
+require(dirname(__FILE__).'/../settings.php');
 
 if(file_get_contents("php://input")){
 	$data = json_decode(file_get_contents("php://input"));
