@@ -1,7 +1,9 @@
 <?php
 include_once('set.php');
 ini_set("log_errors", 1);
-ini_set("error_log", $_SERVER["DOCUMENT_ROOT"]."/log/aesop.log");
+ini_set("error_log", "../log/aesop.log");
+
+
 
 if(isset($_COOKIE["auth"])){
 	$cookie=json_decode($_COOKIE["auth"]);
@@ -16,10 +18,9 @@ if(isset($cookie->uid)){
 	}
 }
 
-$sandbox=$_SERVER["DOCUMENT_ROOT"].'/utils/';
+$sandbox=$_SERVER["DOCUMENT_ROOT"].'/../utils/';
 $context=$_SERVER["DOCUMENT_ROOT"].'/static/resources/'; //create the base path for file uploads
 $mtypes=['bvideo','fvideo','fimage','foverlay','oaudio','poster','timage'];
-
 
 
 //Process file uploads

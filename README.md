@@ -30,7 +30,7 @@ Apache2 virtualhost config to include:
 Clone the repo, cd into app directory and set permissions:
 
 ```bash
-sudo chown -R www-data:www-data static/resources utils
+sudo chown -R www-data:www-data app/static/resources utils log
 ```
 
 Spin it up in a web browser and follow the install insructions

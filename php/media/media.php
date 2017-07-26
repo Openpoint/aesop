@@ -1,10 +1,11 @@
 <?php
 ini_set("log_errors", 1);
-ini_set("error_log", dirname(__FILE__)."/../../log/aesop.log");
+ini_set("error_log", "../log/aesop.log");
 
 //create the poster directory
 if($p_type==='bvideo' || $p_type==='fvideo'){
-	$cmd='mkdir -p '.$context.'poster/'.$dir.';chmod -R 774 '.$context.'poster/';
+	$cmd='mkdir -p '.$context.'poster/'.$dir;
+	error_log($cmd);
 	exec($cmd);
 }
 
@@ -37,7 +38,7 @@ function setfile(){
 			//echo $orig."\n";
 			//echo $target;
 			//return;
-			$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/php/media/media2.php --peg \''.$peg.'\' --url false --command "vidprocess" --title "'.$title.'" --ttitle "'.$ttitle.'" --ext "'.$ext.'" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';
+			$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/../php/media/media2.php --peg \''.$peg.'\' --url false --command "vidprocess" --title "'.$title.'" --ttitle "'.$ttitle.'" --ext "'.$ext.'" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';
 
 			loading();
 			//exec($cmd);
@@ -54,7 +55,7 @@ function setfile(){
 function viddl(){
 	global $title, $ext, $sandbox, $p_vidi,$starttime, $endtime, $peg, $context, $p_type, $p_sid, $p_chid, $p_porder, $p_corder, $p_pid, $dir;
 	$url=$p_vidi->vurl;
-	$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/php/media/media2.php --peg \''.$peg.'\' --url "'.$url.'" --command "viddl" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';
+	$cmd='nohup php '.$_SERVER["DOCUMENT_ROOT"].'/../php/media/media2.php --peg \''.$peg.'\' --url "'.$url.'" --command "viddl" --context "'.$context.'" --sandbox "'.$sandbox.'" --starttime '.$starttime.' --endtime '.$endtime.' > /tmp/console.log 2>&1 & echo $!';
 
 	loading();
 	queue($cmd,null,$p_sid,$p_chid,$p_pid,$p_porder,$p_corder,$p_type,$title);
@@ -63,11 +64,11 @@ function viddl(){
 
 
 //check if local version of youtube-dl exists and download if not
-if(file_exists($_SERVER["DOCUMENT_ROOT"].'/utils/youtube-dl')){
+if(file_exists($_SERVER["DOCUMENT_ROOT"].'/../utils/youtube-dl')){
 	setfile();
 }else{
-	exec("wget 'https://yt-dl.org/downloads/latest/youtube-dl' -O '".$_SERVER["DOCUMENT_ROOT"]."/utils/youtube-dl'");
-	exec("chmod a+rx '".$_SERVER["DOCUMENT_ROOT"]."/utils/youtube-dl'");
+	exec("wget 'https://yt-dl.org/downloads/latest/youtube-dl' -O '".$_SERVER["DOCUMENT_ROOT"]."/../utils/youtube-dl'");
+	exec("chmod a+rx '".$_SERVER["DOCUMENT_ROOT"]."/../utils/youtube-dl'");
 	setfile();
 }
 

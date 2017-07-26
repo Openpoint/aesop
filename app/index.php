@@ -18,7 +18,7 @@
 
 <body>
 	<?php
-
+		$belongsto = 'aesop';
 		if(!file_exists('../settings.php')){
 			header('Location: install/install.php');
 			exit;
@@ -29,7 +29,7 @@
 			exit;
 		}
 		if(is_writable('../settings.php')){
-			die('<div class="container">Please remove write permissions from '.$_SERVER["DOCUMENT_ROOT"].'/settings.php and reload the page</div>');
+			die('<div class="container">Please remove write permissions from /settings.php and reload the page</div>');
 		}
 		if(isset($_GET['method']) && $_GET['method']==='setpass'){
 			setcookie('user','{"uid":"'.$_GET['uid'].'","authtoken":"'.$_GET['token'].'","method":"reset"}',0,'/');

@@ -1,5 +1,4 @@
 settings.php
-logs
 *.log
 !.gitignore
 utils/youtube-dl

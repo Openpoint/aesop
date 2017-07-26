@@ -1,6 +1,6 @@
 <?php
 ini_set("log_errors", 1);
-ini_set("error_log", $_SERVER["DOCUMENT_ROOT"]."/log/aesop.log");
+ini_set("error_log","../log/aesop.log");
 
 include_once('set.php');
 

@@ -5,6 +5,7 @@ include_once(dirname(__FILE__).'/../set.php');
 ini_set("log_errors", 1);
 ini_set("error_log", dirname(__FILE__)."/../../log/aesop.log");
 
+
 //get the parent PID for the queue system
 $prid=exec('echo $PPID');
 
@@ -48,8 +49,12 @@ if($command === 'vidprocess'){
 //proceed with the media download
 function viddl(){
 	global $sandbox,$url,$peg,$download,$title,$ttitle,$ext;
-	exec($sandbox.'/utils/youtube-dl -U');
-	$json=exec($sandbox."youtube-dl -j -4 --no-playlist ".$url,$ouput,$err);
+	
+	
+	//exec($sandbox.'youtube-dl -U');
+	$dl = $sandbox."youtube-dl -j -4 --no-playlist ".$url;
+	
+	$json=exec($dl,$ouput,$err);
 	//error_log(print_r($err,true));
 	if($err === 0){
 		$json=json_decode($json);
@@ -67,9 +72,11 @@ function viddl(){
 	//only download if file has not been downloaded before
 	if(!file_exists ($download)){
 		$cmd=$sandbox.'youtube-dl -4 --no-playlist --playlist-items 1 -o "'.$download.'" "'.$url.'"';
+		
 		$sql = "UPDATE queue SET message = array_append(message, 'Downloading the media')  WHERE sid=".$peg->sid." AND chid=".$peg->chid." AND pid=".$peg->pid." AND type='".$peg->type."'";
 		commit($sql);
 		echo 'Downloading Video';
+		error_log($cmd);
 		exec($cmd);
 	}
 	vidprocess();

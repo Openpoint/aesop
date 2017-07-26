@@ -680,11 +680,11 @@ Asp.page.story.controller('FileUp', ['$scope', '$http', '$timeout', 'Upload',fun
 			'pid'  : $scope.c.context.pid,
 			'sid' : $scope.c.context.sid,
 			'type': $scope.c_admin.subcontext,
-			'vidi' : $scope.placeholder[$scope.c_admin.subcontext].vidi
+			'vidi' : $scope.placeholder[$scope.c_admin.subcontext].vidi,
+			'secret':'aesopsupersecret'
 		}
-		console.log(fields);
 		$scope.up=Upload.upload({
-			url : '/php/connect.php',
+			url : '/handler.php',
 			method: 'POST',
 			fields : fields,
 			file: file
