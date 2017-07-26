@@ -20,7 +20,8 @@ Apache2 mod_rewrite is required
 Apache2 virtualhost config to include:
 
 ```html
-<Directory /var/www/html/yourproject>
+DocumentRoot /var/www/html/aesop/app
+<Directory /var/www/html/aesop/app>
     Options Indexes FollowSymLinks MultiViews
     AllowOverride All
     Order allow,deny
