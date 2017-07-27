@@ -710,6 +710,11 @@ body.home{
 	opacity:.65;
 	font-size:.7em;
 }
+.nothing p{
+	text-shadow:none;
+	font-size:.75em;
+	text-transform:none;
+}
 /* ------------------------------------------------------------------------------------------forms css stylesheet */
 #admin h1{
 color:black;

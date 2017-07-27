@@ -1,22 +1,5 @@
 <!doctype html>
-<!--
-Copyright 2017 Michael Jonker (http://openpoint.ie)
 
-This file is part of Aesop.
-
-Aesop is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
-
-Aesop is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
--->
 <?php
 	session_start();
 	if (empty($_SESSION['token'])) {
@@ -27,6 +10,45 @@ along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
 		}
 	}
 	$token = $_SESSION['token'];
+?>
+
+<html lang="en" ng-app="Aesop">
+<head>
+	<meta charset="utf-8">
+	<!--
+	Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+	This file is part of Aesop.
+
+	Aesop is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	any later version.
+
+	Aesop is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+	-->
+	<link rel="shortcut icon" type="image/png" href="static/css/favicon.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+	<meta name="csrf-token" content="<?= $token ?>">
+	
+	<title>Aesop | Create a story</title>
+	<base href="/">
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="static/css/normalize.css"/>
+	<link rel="stylesheet" href="static/css/fontello.css"/>
+	<link rel="stylesheet" href="static/css/app.css"/>
+	<link rel="stylesheet" href="static/css/fluidmedia.css"/>
+	<script language="javascript" type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script language="javascript" type="text/javascript" src="node_modules/imagesloaded/imagesloaded.pkgd.min.js"></script>
+	<script language="javascript" type="text/javascript" src="node_modules/jquery-mousewheel/jquery.mousewheel.js"></script>
+</head>
+<?php
 
 	if(!file_exists('../settings.php')){
 		header('Location: install/install.php');
@@ -50,25 +72,6 @@ along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
 		$User = false;
 	}
 ?>
-
-<html lang="en" ng-app="Aesop">
-<head>
-	<link rel="shortcut icon" type="image/png" href="static/css/favicon.png">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-	<meta name="csrf-token" content="<?= $token ?>">
-	<meta charset="utf-8">
-	<title>Aesop | Create a story</title>
-	<base href="/">
-	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="static/css/normalize.css"/>
-	<link rel="stylesheet" href="static/css/fontello.css"/>
-	<link rel="stylesheet" href="static/css/app.css"/>
-	<link rel="stylesheet" href="static/css/fluidmedia.css"/>
-	<script language="javascript" type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
-	<script language="javascript" type="text/javascript" src="node_modules/imagesloaded/imagesloaded.pkgd.min.js"></script>
-	<script language="javascript" type="text/javascript" src="node_modules/jquery-mousewheel/jquery.mousewheel.js"></script>
-</head>
-
 <body>
 
 	<div id='mainwrapper' ng-controller="common">

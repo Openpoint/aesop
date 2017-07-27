@@ -55,10 +55,17 @@ if(isset($_COOKIE['user'])){
 			</div>
 		</div>
 	</div>
-	<div ng-if="list==='false'">
-		<h1>Welcome to Aesop</h1>
-		<p>Nothing has been created yet.</p>
-		<p ng-if="c.user" ng-click="add('add',null)" >Please create a new story</p>
+	<div ng-if="list==='false'" class="fouter">
+		<div class='fteaserouter'>
+			<div class='w100 fteaser nothing'>
+				<img src='/static/resources/timage/placeholder.jpg' />
+				<div class='ftitle'>
+					Welcome to Aesop
+					<p>Nothing has been created yet.</p>
+					<p>Please create a new story from the top menu</p>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class='clearfix'></div>
 

@@ -86,6 +86,7 @@ var Aesop=angular.module('Aesop', [
 	/*-------------------------- Various top level screen container size functions -----------------------------------*/
 	$scope.$on('$routeChangeStart', function(event) {
 		$timeout(function(){
+			console.log(window.location.pathname);
 			$('body').removeClass().addClass(window.location.pathname.replace('/',''));
 		})
 	});

@@ -17,11 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
 */
+$root = dirname(__FILE__);
 
 ini_set("log_errors", 1);
-ini_set("error_log","log/reset_error.log");
+ini_set("error_log",$root."/log/reset_error.log");
 
 include_once('php/set.php');
+
 
 function undo($sid){
 	global $dbh,$mtypes;
@@ -34,22 +36,25 @@ function undo($sid){
 
 	pg_query($dbh, $sql);
 
-	$cmd = 'rm -r ';
+	
 	foreach($mtypes as $type){
-		$path = 'app/static/resources/'.$type.'/'.$sid;
+		$path = $root.'/app/static/resources/'.$type.'/'.$sid;
 		if(file_exists ($path)){
-			$cmd=$cmd.$path.' ';
+			$cmd = 'rm -r '.$path;
+			exec($cmd);
 		}
 	}
-	exec($cmd);
 }
 exec('pkill avconv');
-$files = array_diff(scandir('utils/vidlib'),array('..', '.','.gitignore'));
-$cmd = 'rm ';
-foreach($files as $file){
-	$cmd = $cmd.' utils/vidlib/'.$file.' ';
+$files = array_diff(scandir($root.'/utils/vidlib'),array('..', '.','.gitignore'));
+if(count($files)){
+	$cmd = 'rm ';
+	foreach($files as $file){
+		$cmd = $cmd.$root.'/utils/vidlib/'.$file.' ';
+	}
+	exec($cmd);	
 }
-exec($cmd);
+
 
 $sql = "SELECT * FROM story";
 $result = pg_query($dbh, $sql);
