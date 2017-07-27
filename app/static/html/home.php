@@ -39,7 +39,7 @@ if(isset($_COOKIE['user'])){
 		<p class='alpha'>* Aesop is ALPHA software. This demo will be reset 24:00 GMT</p>
 
 	</div>
-	<div ng-if="list!=='false'" ng-repeat='story in list' class="fouter" ng-mouseEnter="down($event)" ng-mouseLeave="down($event)">
+	<div ng-if="list!=='false'" ng-repeat='story in list | orderBy:"sid"' class="fouter" ng-mouseEnter="down($event)" ng-mouseLeave="down($event)">
 		<div class='fteaserouter'>
 			<div class='w100 fteaser' ng-show="c.iready">
 				<a ng-click='c.iready=false' href='/story?story={{story.title}}'>
