@@ -1,5 +1,22 @@
 <!doctype html>
+<!--
+Copyright 2017 Michael Jonker (http://openpoint.ie)
 
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <?php
 	session_start();
 	if (empty($_SESSION['token'])) {
@@ -26,8 +43,14 @@
 	if(isset($_GET['method']) && $_GET['method']==='setpass'){
 		setcookie('user','{"uid":"'.$_GET['uid'].'","authtoken":"'.$_GET['token'].'","method":"reset"}',0,'/');
 	}
+	if(isset($_COOKIE['user'])){
+		$User = $_COOKIE['user'];
+		$User = json_decode($User);
+	}else{
+		$User = false;
+	}
 ?>
-	
+
 <html lang="en" ng-app="Aesop">
 <head>
 	<link rel="shortcut icon" type="image/png" href="static/css/favicon.png">
@@ -52,15 +75,17 @@
 		<div ng-hide='portrait'>
 			<div id='maininner'>
 				<div ng-controller='admin' id='admin' class='admin'>
+					<?php if($User){ ?>
 					<div  ng-if='user.authorised'>
 						<div class='topmen'>
 							<ul class='activities'>
-								<li ng-click="add('add',null)" ng-class="{'active' : c_admin.context=='add'}">NEW</li>
+								<li ng-click="add('add',null)" ng-class="{'active' : c_admin.context=='add'}">NEW <span class='denied' ng-if = '!c.allowed&&c.context.sid'>&lt;--Acess denied, create your own story</span></li>
+
 								<li ng-click="add('help',null)" ng-class="{'active' : c_admin.context=='help'}" ng-if='all.a.story.sid'>Help</li>
-								<li ng-click="add('resource',null)" ng-class="{'active' : c_admin.context=='resource'}" ng-if='all.a.story.sid'>Media</li>
-								<li ng-click="add('content',null)" ng-class="{'active' : c_admin.context=='content'}" ng-if='all.a.story.sid'>Text</li>
-								<li ng-click="add('order',null)" ng-class="{'active' : c_admin.context=='order'}" ng-if='all.a.story.sid'>Order</li>
-								<li ng-click="add('delete',null)" ng-class="{'active' : c_admin.context=='delete'}" ng-if='all.a.story.sid'>Delete</li>
+								<li ng-click="add('resource',null)" ng-class="{'active' : c_admin.context=='resource'}" ng-if='all.a.story.sid && c.allowed'>Media</li>
+								<li ng-click="add('content',null)" ng-class="{'active' : c_admin.context=='content'}" ng-if='all.a.story.sid && c.allowed'>Text</li>
+								<li ng-click="add('order',null)" ng-class="{'active' : c_admin.context=='order'}" ng-if='all.a.story.sid && c.allowed'>Order</li>
+								<li ng-click="add('delete',null)" ng-class="{'active' : c_admin.context=='delete'}" ng-if='all.a.story.sid && c.allowed'>Delete</li>
 								<li ng-click="add('embed',null)" ng-class="{'active' : c_admin.context=='embed'}" ng-if='all.a.story.sid'>Embed Code</li>
 							</ul>
 							<ul class='user'>
@@ -77,22 +102,23 @@
 						</div>
 						<?php include("./static/html/includes/admin2.php") ?>
 					</div>
+					<?php } ?>
+
 					<div id = 'modal' class='modal' ng-show='modal.show_modal' ng-click='modal.toggle()'>
 						<div class='inner'>
 							<div class='content' ng-click='$event.stopPropagation()'>
 								<?php
-									include('./static/html/includes/modals.html');
+									include('./static/html/includes/modals.php');
 								?>
 							</div>
 						</div>
 					</div>
+
 					<div id='login' ng-if="!user.authorised && !locate.embedded"> <!-- Remove login link if being viewed through an embedded iframe -->
 						<a ng-click='modal.modal("login")'>Login</a>
 					</div>
 				</div>
-				<div id='viewport' ng-style="{height:height}" ng-view='viewport'>
-					
-				</div>
+				<div id='viewport' ng-style="{height:height}" ng-view='viewport'></div>
 				<div id='loader' class='loader' ng-hide='c.iready'></div>
 
 			</div>
@@ -108,7 +134,14 @@
 			</div>
 		</div>
 	</div>
-
+	<div id='footer'>
+		<div class='container inner'>
+			<a id='openpoint' href='http://openpoint.ie' target='_blank'>
+				<img src='static/css/openpoint.png' />
+				<span>Aesop is an Openpoint project<br>Please support by providing contract work</span>
+			</a>
+		</div>
+	</div>
 	<script language="javascript" type="text/javascript" src="node_modules/angular/angular.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>

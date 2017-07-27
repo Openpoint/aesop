@@ -1,10 +1,29 @@
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 "use strict";
 
 Asp.page.story=angular.module('story', [])
 .controller('story', ['$scope','$location','$cookieStore','$timeout','getter',function($scope,$location,$cookieStore,$timeout,getter) {
 
 	$('#preload').html('');
-
+	$scope.user=$cookieStore.get('user');
 	$scope.c.context={
 		sid:false
 	};
@@ -17,7 +36,8 @@ Asp.page.story=angular.module('story', [])
 	if(page.story){
 		getter.sid(page.story).then(function(data){ //get the story id from the database (asynchronous)
 			if(data != 'noresult'){
-				$scope.c.context.sid=data*1;
+				$scope.c.context.sid=data.sid*1;
+				$scope.c.allowed=($scope.user.uid == data.owner);
 			}else{
 				window.location='/'; //go home if the story does not exist
 			}
@@ -39,6 +59,8 @@ Asp.page.story=angular.module('story', [])
 			var sid=$scope.c.context.sid;
 
 			getter.all(sid).then(function(data){ //fetch raw data for the context and construct the 'all' reference object. This is the semantic object that contains all the media references.
+
+
 				data.resource2={};
 				data.resource2[-1]={};
 				data.resource2[-1][-2]={}; //the container for the opening slide
@@ -159,8 +181,9 @@ Asp.page.story=angular.module('story', [])
 
 
 						//----------- Just about done and ready to render ----------//
-	
+
 						$scope.all.a=data;
+
 						$scope.c.iready=true; //remove the loading overlay
 
 						//----------- have a look at the 'all' object to understand the data structure and syntax ----------//
@@ -175,6 +198,7 @@ Asp.page.story=angular.module('story', [])
 
 							$scope.c.context={
 								'sid':$scope.all.a.story.sid*1,
+								'owner':$scope.all.a.story.owner*1,
 								'chid':-1,
 								'c_order':0,
 								'pid':-2,

@@ -1,3 +1,22 @@
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 "use strict";
 
 // controller for the admin menu
@@ -17,7 +36,7 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 	$scope.login = function(user,password){
 		$cookieStore.remove('user');
 		function fetchcookie(){
-			$scope.user=$cookieStore.get('user');
+
 			if(typeof $scope.user == 'undefined'){
 				$timeout(function(){
 					fetchcookie();
@@ -34,8 +53,9 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 		}
 		auth.login(user,password).then(function(data){
 				if(data == 'logged in'){
-					modal.toggle();
-					fetchcookie();
+					location.reload();
+					//modal.toggle();
+					//fetchcookie();
 				}else{
 					$cookieStore.remove('user');
 					alert('incorrect details');
@@ -46,15 +66,21 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 
 	//logout
 	$scope.c.logout = function(){
+		$cookieStore.remove('user');
+		location.reload();
+		/*
 		$timeout(function(){
 			//if(typeof $scope.user!=='undefined' && $scope.user.authorised){
-				$cookieStore.remove('user');
+
+
 				$scope.user={};
 				$scope.c_admin.context=null;
 				$scope.wsize();
 
+
 			//}
 		});
+		*/
 	}
 	//reset a password from url token
 	$scope.setpass=function(){
@@ -219,11 +245,11 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 					$scope.reload();
 				}
 				if(data.result == 'success story'){
-					window.location='/#/story?story='+data.title;
+					window.location='/story?story='+data.title;
 					$scope.c.context.sid=data.sid;
+					$scope.c.owner = data.owner;
 				}
 				if(data.result == 'success page'){
-
 					var contex=JSON.parse(JSON.stringify($scope.c.context));
 					contex.pid=data.pid*1;
 					contex.p_order=data.p_order*1;
@@ -529,17 +555,30 @@ Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','sette
 	})
 }])
 //controller for user admin
-.controller('adminusers', ['$scope','getter','setter',function($scope,getter,setter) {
+.controller('adminusers', ['$scope','$timeout','getter','setter',function($scope,$timeout,getter,setter) {
 	$scope.getusers=function(){
 		getter.users().then(function(data){;
 			$scope.allusers=data;
 		})
 	}
 	$scope.getusers();
-
+	$scope.$watch('newuserpassword',function(){
+		if($scope.newuserpassword !== $scope.passconfirm){
+			$scope.passmatch = false;
+		}else{
+			$scope.passmatch = true;
+		}
+	})
+	$scope.$watch('passconfirm',function(){
+		if($scope.newuserpassword !== $scope.passconfirm){
+			$scope.passmatch = false;
+		}else{
+			$scope.passmatch = true;
+		}
+	})
 	//add a new user
 	$scope.newuser=function(){
-		setter.newuser($scope.newusername,$scope.newusermail,$scope.mailmessage).then(function(data){
+		setter.newuser($scope.newusername,$scope.newusermail,$scope.newuserpassword).then(function(data){
 			$scope.notice(null,data);
 			$scope.getusers();
 		});

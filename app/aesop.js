@@ -1,9 +1,29 @@
-'use strict';
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
 
-$.ajaxSetup({
-    headers : {
-        'CsrfToken': $('meta[name="csrf-token"]').attr('content')
-    }
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+'use strict';
+var USER = false;
+decodeURIComponent(document.cookie).split(';').forEach(function(c){
+	c=c.trim();
+	if(c.indexOf('user=') === 0){
+		USER = JSON.parse(c.replace('user=',''));
+	}
 });
 
 var Asp={
@@ -64,7 +84,11 @@ var Aesop=angular.module('Aesop', [
 
 
 	/*-------------------------- Various top level screen container size functions -----------------------------------*/
-
+	$scope.$on('$routeChangeStart', function(event) {
+		$timeout(function(){
+			$('body').removeClass().addClass(window.location.pathname.replace('/',''));
+		})
+	});
 	$scope.portrait=true;
 
 	$scope.wsize= function(){ //the size of outer containers

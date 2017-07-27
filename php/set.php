@@ -1,7 +1,32 @@
 <?php
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+$mtypes=['bvideo','fvideo','fimage','foverlay','oaudio','poster','timage'];
+if(isset($_COOKIE['user'])){
+	$User = $_COOKIE['user'];
+	$User = json_decode($User);
+}else{
+	$User = false;
+}
 
 require(dirname(__FILE__).'/../settings.php');
-
 if(file_get_contents("php://input")){
 	$data = json_decode(file_get_contents("php://input"));
 }else{

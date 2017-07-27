@@ -1,3 +1,22 @@
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /*--------------------------Modals------------------------------------------------*/
 
 
@@ -11,14 +30,14 @@ Aesop.factory('modal',['$cookieStore','auth',function($cookieStore,auth){
 		toggle : function(){
 			this.show_modal = this.show_modal === false ? true: false;
 		},
-		modal : function(context){			
+		modal : function(context){
 			this.modals={};
 			if(context){
 				this.modals[context]=true;
 			}
 			this.toggle();
 		},
-	}	
+	}
 }])
 
 /*--------------------------Video Playback------------------------------------------------*/
@@ -28,10 +47,10 @@ Aesop.factory('video',[function(){
 	var vidplaying=true
 
 	return {
-		vcontrols:{			
+		vcontrols:{
 		},
-		reportProgress:function(){			
-			this.vcontrols.vprogress=Math.floor((Asp.media.fvideo.currentTime/Asp.media.fvideo.duration)*100);			
+		reportProgress:function(){
+			this.vcontrols.vprogress=Math.floor((Asp.media.fvideo.currentTime/Asp.media.fvideo.duration)*100);
 			var date = new Date((Asp.media.fvideo.duration-Asp.media.fvideo.currentTime) * 1000);
 			var hh = date.getUTCHours();
 			var mm = date.getUTCMinutes();
@@ -44,7 +63,7 @@ Aesop.factory('video',[function(){
 			if (ss < 10) {ss = "0"+ss;}
 			// This formats your string to HH:MM:SS
 			this.vcontrols.vidtime = hh+":"+mm+":"+ss;
-			return this.vcontrols; 
+			return this.vcontrols;
 		},
 		reportBuffer:function(){
 			if(Asp.media.fvideo.buffered.length > 0 && Math.floor((Asp.media.fvideo.buffered.end(0)/Asp.media.fvideo.duration)*100) < 100){
@@ -52,31 +71,31 @@ Aesop.factory('video',[function(){
 			}else{
 				this.vcontrols.vlprogress=100;
 			}
-			return this.vcontrols;			
+			return this.vcontrols;
 		},
 		playvid:function(){
-			var self=this;		
+			var self=this;
 			Asp.media.fvideo.load();
 
-			
+
 			this.vidout();
 			$('#vidcontrols').hover(function(){
 				self.vidpeg();
 			},function(){
 				self.vidpeg('over');
-			})								
+			})
 		},
 		vidout:function(){
-			
+
 			vfade=setTimeout(function(){
 				if(!Asp.media.fvideo.paused){
 					clearTimeout(vfade);
 					$('#vidcontrols').animate({opacity:0},1500)
 				}
 			},2000)
-			
+
 		},
-		
+
 		vidpeg:function(x){
 			if(!Asp.isTouch){
 				clearTimeout(vfade);
@@ -97,7 +116,7 @@ Aesop.factory('video',[function(){
 		},
 		vidfade:function(x){
 			$('#vidcontrols').animate({opacity:1});
-			clearTimeout(vfade);		
+			clearTimeout(vfade);
 			this.vidout()
 		}
 	}

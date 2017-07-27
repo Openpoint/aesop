@@ -1,4 +1,24 @@
 <?php
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 $sql="
 --
 -- PostgreSQL database dump
@@ -12,14 +32,14 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -32,7 +52,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: chapter; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: chapter; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 CREATE TABLE chapter (
@@ -69,7 +89,7 @@ ALTER SEQUENCE chapter_chid_seq OWNED BY chapter.chid;
 
 
 --
--- Name: page; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: page; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 CREATE TABLE page (
@@ -107,7 +127,7 @@ ALTER SEQUENCE page_pid_seq OWNED BY page.pid;
 
 
 --
--- Name: queue; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: queue; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 CREATE TABLE queue (
@@ -173,7 +193,7 @@ ALTER SEQUENCE queue_qid_seq OWNED BY queue.qid;
 
 
 --
--- Name: resource; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: resource; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 CREATE TABLE resource (
@@ -217,7 +237,7 @@ ALTER SEQUENCE resource_rid_seq OWNED BY resource.rid;
 
 
 --
--- Name: settings; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: settings; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 CREATE TABLE settings (
@@ -228,14 +248,15 @@ CREATE TABLE settings (
 ALTER TABLE public.settings OWNER TO ".$_POST['dbuser'].";
 
 --
--- Name: story; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: story; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 CREATE TABLE story (
     sid integer NOT NULL,
     title character varying(256),
     text text DEFAULT 'Story summary'::text,
-    location text
+    location text,
+	owner integer
 );
 
 
@@ -263,7 +284,7 @@ ALTER SEQUENCE story_sid_seq OWNED BY story.sid;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 CREATE TABLE users (
@@ -344,7 +365,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
--- Name: chapter_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: chapter_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 ALTER TABLE ONLY chapter
@@ -352,7 +373,7 @@ ALTER TABLE ONLY chapter
 
 
 --
--- Name: page_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: page_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 ALTER TABLE ONLY page
@@ -360,7 +381,7 @@ ALTER TABLE ONLY page
 
 
 --
--- Name: queue_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: queue_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 ALTER TABLE ONLY queue
@@ -368,7 +389,7 @@ ALTER TABLE ONLY queue
 
 
 --
--- Name: resource_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: resource_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 ALTER TABLE ONLY resource
@@ -376,7 +397,7 @@ ALTER TABLE ONLY resource
 
 
 --
--- Name: story_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: story_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 ALTER TABLE ONLY story
@@ -384,7 +405,7 @@ ALTER TABLE ONLY story
 
 
 --
--- Name: story_title_key; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: story_title_key; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 ALTER TABLE ONLY story
@@ -392,7 +413,7 @@ ALTER TABLE ONLY story
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace: 
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: ".$_POST['dbuser']."; Tablespace:
 --
 
 ALTER TABLE ONLY users

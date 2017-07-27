@@ -1,4 +1,22 @@
 <?php
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 include_once(dirname(__FILE__).'/../set.php');
 
@@ -49,11 +67,11 @@ if($command === 'vidprocess'){
 //proceed with the media download
 function viddl(){
 	global $sandbox,$url,$peg,$download,$title,$ttitle,$ext;
-	
-	
+
+
 	//exec($sandbox.'youtube-dl -U');
 	$dl = $sandbox."youtube-dl -j -4 --no-playlist ".$url;
-	
+
 	$json=exec($dl,$ouput,$err);
 	//error_log(print_r($err,true));
 	if($err === 0){
@@ -71,9 +89,9 @@ function viddl(){
 
 	//only download if file has not been downloaded before
 	if(!file_exists ($download)){
-		$cmd=$sandbox.'youtube-dl -4 --no-playlist --playlist-items 1 -o "'.$download.'" "'.$url.'"';	
+		$cmd=$sandbox.'youtube-dl -4 --no-playlist --playlist-items 1 -o "'.$download.'" "'.$url.'"';
 		$sql = "UPDATE queue SET message = array_append(message, 'Downloading the media')  WHERE sid=".$peg->sid." AND chid=".$peg->chid." AND pid=".$peg->pid." AND type='".$peg->type."'";
-		commit($sql);	
+		commit($sql);
 		exec($cmd);
 	}
 	vidprocess();
@@ -108,7 +126,7 @@ function vidprocess(){
 		$vinfo->newwidth = $vinfo->width;
 		$vinfo->newheight = $vinfo->height;
 	}
-	
+
 
 
 	//Process the video time slices into hh:mm:ss format
@@ -137,7 +155,7 @@ function vidprocess(){
 	}
 	$endtime = maketime($endtime);
 
-	
+
 	$title=$title.'_cropped';
 	if($peg->type==='bvideo' || $peg->type==='fvideo'){
 		$sql = "UPDATE queue SET message = array_append(message, 'Converting video - this could take a while'), title = '".$title.".mp4'  WHERE sid=".$peg->sid." AND chid=".$peg->chid." AND pid=".$peg->pid." AND type='".$peg->type."'";

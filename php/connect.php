@@ -1,23 +1,27 @@
 <?php
-include_once('set.php');
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
 
-if(isset($_COOKIE["auth"])){
-	$cookie=json_decode($_COOKIE["auth"]);
-}
-if(isset($cookie->uid)){
-	include_once('auth.php');
-	$token=gettoken($cookie->uid);
-	if($token == $cookie->authtoken){
-		$authorised = true;
-	}else{
-		$authorised = false;
-	}
-}
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+include_once('set.php');
 
 $sandbox=$_SERVER["DOCUMENT_ROOT"].'/../utils/';
 $context=$_SERVER["DOCUMENT_ROOT"].'/static/resources/'; //create the base path for file uploads
-$mtypes=['bvideo','fvideo','fimage','foverlay','oaudio','poster','timage'];
-
 
 //Process file uploads
 
@@ -172,29 +176,29 @@ if($data->method === 'delres'){
 	}
 	return;
 }
-if($data->method === 'validate' && $authorised){
-	echo('valid');
-}
+
 if($data->method === 'getsid'){
 
 	global $p_title,$dbh;
-	$sql = "SELECT sid FROM story WHERE title= '".$p_title."'";
+	$sql = "SELECT sid,owner FROM story WHERE title= '".$p_title."'";
 	$result = pg_query($dbh, $sql);
 	if (!$result) {
 		echo json_encode(pg_last_error($dbh));
 	}else{
 		$arr = pg_fetch_all($result);
 		if($arr[0]['sid']){
-			echo($arr[0]['sid']);
+			echo json_encode($arr[0]);
 		}else{
 			echo('noresult');
 		}
 	}
 }
 if($data->method === 'new_story'){
-
+	if(!$User){
+		return;
+	}
 	global $p_title,$dbh;
-	$sql = "INSERT INTO story (title) VALUES ('".$p_title."') RETURNING sid";
+	$sql = "INSERT INTO story (title,owner) VALUES ('".$p_title."',".$User->uid.") RETURNING sid";
 	$result = pg_query($dbh, $sql);
 	if (!$result) {
 		$return = array(
@@ -344,6 +348,7 @@ if($data->method === 'getall'){
 		$arr = pg_fetch_all($result);
 		$all['resource']=$arr;
 	}
+
 	echo json_encode($all);
 }
 if($data->method === 'getstories'){

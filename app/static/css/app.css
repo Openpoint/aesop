@@ -1,3 +1,22 @@
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 .clearfix:after {
 content: " "; /* Older browser do not support empty content */
 visibility: hidden;
@@ -11,6 +30,9 @@ height:100%;
 width:100%;
 position:relative;
 overflow:hidden;
+}
+body.home{
+	overflow-y:auto;
 }
 .underline {
 text-decoration:underline;
@@ -67,9 +89,7 @@ margin:0;
 #sidebar h3{
 opacity:.5;
 }
-p {
-white-space: pre-wrap;
-}
+
 ul {
 padding:0;
 margin:0;
@@ -88,13 +108,14 @@ background-repeat:no-repeat;
 background-position:center center;
 }
 #login a{
-display:block;
-padding:.5em;
-background:rgba(255,255,255,.5);
-position:fixed;
-right:10px;
-top:10px;
-cursor:pointer;
+	display:block;
+	padding:.5em;
+	background:rgba(255,255,255,.5);
+	position:fixed;
+	right:10px;
+	top:10px;
+	cursor:pointer;
+	z-index:1000;
 }
 #admin, #admin2 {
 position:relative;
@@ -613,7 +634,81 @@ height:100%;
 z-index:4;
 }
 .container.fteaserwrap {
-margin-top:40px;
+	padding:40px 10px;
+	box-sizing: border-box;
+}
+#fintro{
+	max-width:600px;
+	margin:0 auto;
+	padding-bottom:20px;
+	text-align:center;
+}
+#fintro p{
+	text-align:left;
+	line-height:1.5em;
+}
+#fintro a{
+	color:#517488;
+}
+#fintro .alpha{
+	font-size:.8em;
+	color:#517488;
+	text-align:center;
+}
+#fintro h1{
+	color:#517488;
+	text-shadow:none;
+}
+.button{
+	border:1px solid #517488;
+	color:#517488;
+	cursor:pointer;
+	display:inline-block;
+	padding:6px;
+	margin-top:10px;
+}
+li .denied{
+	opacity:.5;
+	font-size:.85em;
+}
+#footer {
+	display:none;
+	width:100%;
+	border-top:1px solid #517488;
+	text-align:center;
+	padding:20px 0;
+	box-sizing: border-box;
+	color:#517488;
+}
+#footer img{
+	height:40px;
+	width:auto;
+
+}
+.home #footer{
+	display:block;
+}
+.home #viewport{
+	height:auto!important;
+}
+body.home{
+	display:flex;
+	flex-direction:column;
+}
+.home #mainwrapper{
+	flex-grow:1;
+}
+#openpoint span{
+	padding-left:10px;
+}
+#openpoint{
+	display:inline-flex;
+	align-items:flex-end;
+	text-align:left;
+	text-decoration:none;
+	color:black;
+	opacity:.65;
+	font-size:.7em;
 }
 /* ------------------------------------------------------------------------------------------forms css stylesheet */
 #admin h1{
@@ -733,25 +828,28 @@ position:relative;
 margin: 0 auto;
 max-width:100%;
 }
+.fteaserouter{
+	border:1px solid #517488;
+	margin:2px;
+}
 .fteaser {
-
-overflow:hidden;
+	overflow:hidden;
 }
 .fouter{
-position:relative;
-float:left;
-width:25%;
-background:grey;
-
+	position:relative;
+	float:left;
+	width:25%;
 }
 .storydets{
-position:absolute;
-width:100%;
-left:0;
-z-index:10;
-height:0;
-overflow:hidden;
-pointer-events:none;
+	position:absolute;
+	width:100%;
+	left:0;
+	z-index:10;
+	height:0;
+	overflow:hidden;
+	pointer-events:none;
+	padding:0 2px;
+	box-sizing:border-box;
 }
 .storydets .inner{
 padding:.75em;

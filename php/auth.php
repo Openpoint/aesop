@@ -1,4 +1,24 @@
 <?php
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 
 include_once('set.php');
 
@@ -157,18 +177,20 @@ if($data->method === 'newpass'){
 }
 
 if($data->method === 'newuser'){
-
-	global $dbh,$p_username,$p_usermail,$p_mess,$uid,$token,$mess;
+	global $dbh,$p_username,$p_usermail,$p_mess,$p_password,$uid,$token,$mess;
 	$unique = unique();
 	$mess=array();
 	if($unique[0]['user'] < 1 && $unique[0]['email'] < 1){
 
 		$salt= uniqid(mt_rand(), true);
-		$password=randomPassword();
+		//$password=randomPassword();
+		$password=$p_password;
 		$hash = crypt($password,'$6$rounds=5000$'.$salt.'$');
 		$token=authtoken();
 
-		$sql = "INSERT INTO users (username,hash,salt,email,authtoken) VALUES ('".$p_username."','".$hash."','".$salt."','".$p_usermail."','".$token."') RETURNING id";
+		//$sql = "INSERT INTO users (username,hash,salt,email,authtoken) VALUES ('".$p_username."','".$hash."','".$salt."','".$p_usermail."','".$token."') RETURNING id";
+		$sql = "INSERT INTO users (username,hash,salt,email,authtoken,role,verified) VALUES ('".$p_username."','".$hash."','".$salt."','".$p_usermail."','".$token."','user','1') RETURNING id";
+
 
 		$result = pg_query($dbh, $sql);
 		if (!$result) {
@@ -182,10 +204,12 @@ if($data->method === 'newuser'){
 				'message'=>'User "'.$p_username.'" has been added'
 			);
 			array_push ($mess,$m);
+			/*
 			$p_mess=$p_mess."\r\n\r\n".
 			"Your username is ".$p_username."\r\n\r\n".
 			"Please follow the link below to set your password:"."\r\n";
 			mailuser($p_usermail,'New Account',$p_mess);
+			*/
 		}
 	}else{
 		if($unique[0]['user'] > 0){

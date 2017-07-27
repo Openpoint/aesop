@@ -1,7 +1,26 @@
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 @media all and (orientation: portrait)  {
-  
+
 }
-@media all and (orientation: landscape)  {  
+@media all and (orientation: landscape)  {
 
 }
 
@@ -25,7 +44,7 @@
 	}
 	#order_controls, #textframe{
 		width:50%;
-	}	
+	}
 }
 @media screen and (max-device-width:760px) and (orientation:landscape),screen and (max-device-width:860px) and (orientation:portrait), all and (max-width: 860px) {
 	body{
@@ -54,6 +73,5 @@
 
 }
 @media screen and (max-device-width:360px) and (orientation:landscape),screen and (max-device-width:520px) and (orientation:portrait), all and (max-width: 500px) {
-	
-}
 
+}

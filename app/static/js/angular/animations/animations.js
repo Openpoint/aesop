@@ -1,26 +1,43 @@
+/*
+Copyright 2017 Michael Jonker (http://openpoint.ie)
+
+This file is part of Aesop.
+
+Aesop is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+Aesop is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 'use strict';
-
-
 
 /*----------------------- Story Page ---------------------------------------------------*/
 Asp.page.story.animation('.animate', function() {
-	
-	function background(){	
-		
+
+	function background(){
+
 		$('#mediafocus .pimage, #mediafocus .fimage').remove();
 		Asp.anireset(); //reset the trigger for fade
-		if($('#mediafocus .bvideo').length > 0){		
-			Asp.media.bvideo.poster=Asp.media.bvposter;			
+		if($('#mediafocus .bvideo').length > 0){
+			Asp.media.bvideo.poster=Asp.media.bvposter;
 			Asp.media.bvideo.load();
 			Asp.media.bvideo.controls=true;
 			Asp.media.bvideo.play();
-			Asp.media.bvideo.controls=false;		
+			Asp.media.bvideo.controls=false;
 		}
-		
+
 	}
 	var animate = function(element, className, done){
-				
-		$('#mediafocus').stop().animate({opacity:0},1000,function(){				
+
+		$('#mediafocus').stop().animate({opacity:0},1000,function(){
 			background();
 			$('#mediafocus').css({opacity:1});
 		})
@@ -32,7 +49,7 @@ Asp.page.story.animation('.animate', function() {
 				opacity:0
 			}).stop().animate({
 				marginTop:0,
-				opacity:1	
+				opacity:1
 			},1000);
 
 		}else if($(element).hasClass('down')){
@@ -42,17 +59,17 @@ Asp.page.story.animation('.animate', function() {
 				opacity:0
 			}).stop().animate({
 				marginTop:0,
-				opacity:1	
-			},1000);					
+				opacity:1
+			},1000);
 		}else{
 			$('#textframe .inner').css({
 				marginTop:0,
 				display:'block',
 				opacity:0
 			}).stop().animate({
-				opacity:1	
+				opacity:1
 			});
-		}				
+		}
 	};
 
 	return {
@@ -64,15 +81,15 @@ Asp.page.story.animation('.animate', function() {
 		$(element).stop().animate({opacity:1},function(){
 			//done();
 		});
-		var os=($(window).height()-($(element).offset().top+$(element).outerHeight()));	
+		var os=($(window).height()-($(element).offset().top+$(element).outerHeight()));
 		if(os < 0){
 			$(element).css({top:os,display:'block'});
 		}else{
 			$(element).css({top:0,display:'block'});
-		}	
+		}
 	};
 	var hide = function(element, className, done){
-		$(element).stop().css({opacity:0,top:0,display:'none'})	
+		$(element).stop().css({opacity:0,top:0,display:'none'})
 	};
 	 return {
 		addClass: hide,
@@ -90,7 +107,7 @@ Asp.page.home.animation('.fteaserwrap', function() {
 				$(this).parents('.fteaser').animate({opacity:1});
 				this.style.position='relative';
 				this.style.top=(theight-this.height)/2+'px';
-			})		
+			})
 		})
 	}
 
@@ -114,7 +131,7 @@ Aesop.animation('.slide_d', function() {
 				if($(this).outerHeight() < $(active).height()){
 					$(this).outerHeight($(active).height())
 				};
-			})			
+			})
 			adminmen(active);
 		},100)
 	}
@@ -134,11 +151,11 @@ Aesop.animation('.slide_d', function() {
 		var height = $(element).height();
 
 		$(element).height(0);
-		
+
 		$(element).animate({height:height, opacity:1},function(){
 				adminmen($(element));
-				//$(element).height('auto');				
-		})		
+				//$(element).height('auto');
+		})
 	};
 	 return {
 		beforeAddClass: animateUp,
