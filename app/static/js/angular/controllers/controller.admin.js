@@ -2,6 +2,7 @@
 
 // controller for the admin menu
 Aesop.controller('admin', ['$scope','$cookieStore','$timeout','$location','setter','getter','modal','auth',function($scope,$cookieStore,$timeout,$location,setter,getter,modal,auth) {
+
 	$scope.modal=modal;
 
 	$scope.placeholder={

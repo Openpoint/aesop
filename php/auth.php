@@ -1,5 +1,5 @@
 <?php
-error_log('auth.php');
+
 include_once('set.php');
 
 $uid;

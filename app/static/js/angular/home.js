@@ -2,7 +2,6 @@
 
 Asp.page.home=angular.module('home', [])
 .controller('home',['$scope','$rootScope','$cookieStore',function($scope,$rootScope,$cookieStore) {
-
 	$scope.c.iready=false;
 	$scope.style.extra = 110;
 
@@ -20,7 +19,6 @@ Asp.page.home=angular.module('home', [])
 
 }])
 .controller('frontlist', ['$scope','$rootScope','getter',function($scope,$rootScope,getter) { //controller for hover on the story tiles
-	//console.log("frontlist");
 	$scope.tshow=false;
 
 	getter.storylist().then(function(data){

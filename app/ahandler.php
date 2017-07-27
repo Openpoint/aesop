@@ -3,6 +3,7 @@
 ini_set("log_errors", 1);
 ini_set("error_log","../log/aesop.log");
 
+
 if (!isset($_SESSION)) {
     session_start();
 }

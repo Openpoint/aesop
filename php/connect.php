@@ -1,9 +1,5 @@
 <?php
 include_once('set.php');
-ini_set("log_errors", 1);
-ini_set("error_log", "../log/aesop.log");
-
-
 
 if(isset($_COOKIE["auth"])){
 	$cookie=json_decode($_COOKIE["auth"]);

@@ -1,7 +1,5 @@
 <?php
 
-error_log('set.php');
-
 require(dirname(__FILE__).'/../settings.php');
 
 if(file_get_contents("php://input")){

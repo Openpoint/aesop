@@ -30,11 +30,11 @@
 	
 <html lang="en" ng-app="Aesop">
 <head>
-	<link rel="icon" type="image/png" href="">
+	<link rel="shortcut icon" type="image/png" href="static/css/favicon.png">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 	<meta name="csrf-token" content="<?= $token ?>">
 	<meta charset="utf-8">
-	<title>Dev</title>
+	<title>Aesop | Create a story</title>
 	<base href="/">
 	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="static/css/normalize.css"/>
@@ -91,7 +91,7 @@
 					</div>
 				</div>
 				<div id='viewport' ng-style="{height:height}" ng-view='viewport'>
-
+					
 				</div>
 				<div id='loader' class='loader' ng-hide='c.iready'></div>
 
