@@ -40,12 +40,14 @@ var Aesop=angular.module('Aesop', [
 	'ngFileUpload',
 	'angularMoment',
 	'home',
-	'story'
+	'story',
+	'ngSanitize',
+	'mdMarkdownIt'
 ])
 .run(function($http){
 	$http.defaults.headers.post.CsrfToken = $('meta[name="csrf-token"]').attr('content');
 })
-.config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
+.config(['$routeProvider','$locationProvider','markdownItConverterProvider', function($routeProvider,$locationProvider,markdownItConverter) {
 	$routeProvider.when(
 		'/', {
 		redirectTo: '/home'
@@ -61,6 +63,10 @@ var Aesop=angular.module('Aesop', [
 	})
 	.otherwise({redirectTo: '/home'});
 	$locationProvider.html5Mode(true);
+	markdownItConverter.config('commonmark', {
+		breaks: true,
+		html: true
+	});
 
 }]).constant('angularMomentConfig', {
     timezone: 'UTC'
@@ -86,7 +92,6 @@ var Aesop=angular.module('Aesop', [
 	/*-------------------------- Various top level screen container size functions -----------------------------------*/
 	$scope.$on('$routeChangeStart', function(event) {
 		$timeout(function(){
-			console.log(window.location.pathname);
 			$('body').removeClass().addClass(window.location.pathname.replace('/',''));
 		})
 	});

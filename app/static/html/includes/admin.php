@@ -395,13 +395,15 @@ along with Aesop.  If not, see <http://www.gnu.org/licenses/>.
 		<div class='admin_section'>
 			<h1>Embed a small widget</h1>
 			<textarea style="height:auto;">
-<script>var aesop={};aesop.sauce = "http://{{locate.root}}/story?story={{all.a.story.title}}&request=embedded";aesop.isauce="http://{{locate.root}}/static/resources/timage/{{all.a.story.location||'placeholder.jpg'}}";aesop.title="{{all.a.story.title}}";aesop.loader="url(http://{{locate.root}}/static/css/loader.gif)";aesop.size="small";</script><script src="http://{{locate.root}}/static/js/embed.js"></script><div id="aesop_widget"></div>
+<script src="http://{{locate.root}}/static/js/embed.js"></script>
+<script>aesop.make(document.scripts[document.scripts.length-1],"small","{{all.a.story.title}}",false,"{{all.a.story.location||'placeholder.jpg'}}","http://{{locate.root}}/")</script>
 			</textarea>
 		</div>
 		<div class='admin_section'>
 			<h1>Embed a big widget</h1>
 			<textarea style="height:auto;">
-<script>var aesop={};aesop.sauce = "http://{{locate.root}}/story?story={{all.a.story.title}}&request=embedded";aesop.isauce="http://{{locate.root}}/static/resources/timage/{{all.a.story.location||'placeholder.jpg'}}";aesop.title="{{all.a.story.title}}";aesop.summary="{{all.a.story.text}}";aesop.loader="url(http://{{locate.root}}/static/css/loader.gif)";aesop.size="big";</script><script src="http://{{locate.root}}/static/js/embed.js"></script><div id="aesop_widget"></div>
+<script src="http://{{locate.root}}/static/js/embed.js"></script>
+<script>aesop.make(document.scripts[document.scripts.length-1],"big","{{all.a.story.title}}","{{all.a.story.text | linebreaks}}","{{all.a.story.location||'placeholder.jpg'}}","http://{{locate.root}}/")</script>
 			</textarea>
 		</div>
 	</div>

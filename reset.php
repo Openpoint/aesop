@@ -26,7 +26,7 @@ include_once('php/set.php');
 
 
 function undo($sid){
-	global $dbh,$mtypes;
+	global $dbh,$mtypes,$root;
 	$sql = "
 	DELETE FROM queue;
 	DELETE FROM story WHERE sid = ".$sid.";

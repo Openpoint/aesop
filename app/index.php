@@ -149,6 +149,9 @@
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 	<script language="javascript" type="text/javascript" src="node_modules/angular-route/angular-route.min.js"></script>
+	<script language="javascript" type="text/javascript" src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+    <script language="javascript" type="text/javascript" src="node_modules/markdown-it/dist/markdown-it.min.js"></script>
+    <script language="javascript" type="text/javascript" src="node_modules/angular-markdown-it/dist/ng-markdownit.min.js"></script> 
 	<script language="javascript" type="text/javascript" src="aesop.js"></script>
 	<script language="javascript" type="text/javascript" src="static/js/angular/services/services.js"></script>
 	<script language="javascript" type="text/javascript" src="static/js/angular/factories/factory.js"></script>

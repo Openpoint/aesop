@@ -37,7 +37,7 @@ Asp.page.story=angular.module('story', [])
 		getter.sid(page.story).then(function(data){ //get the story id from the database (asynchronous)
 			if(data != 'noresult'){
 				$scope.c.context.sid=data.sid*1;
-				$scope.c.allowed=($scope.user.uid == data.owner);
+				$scope.c.allowed=($scope.user?($scope.user.uid == data.owner):false);
 			}else{
 				window.location='/'; //go home if the story does not exist
 			}
@@ -45,7 +45,7 @@ Asp.page.story=angular.module('story', [])
 	}
 	if(page.request=='embedded'){ //log user out if story is being accessed through an iframe embed
 		$scope.locate.embedded=true;
-		$scope.c.logout();
+		if($scope.user) $scope.c.logout();
 	}
 
 

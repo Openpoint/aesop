@@ -49,3 +49,12 @@ Aesop.filter('storyname', function() {
 		}
 	}
 })
+.filter('encodeURIComponent', function() {
+    return window.encodeURIComponent;
+})
+.filter('linebreaks', function() {
+    return function(text){
+		if(text) return text.replace(/(?:\r\n|\r|\n)/g, ' ');
+	}
+})
+
