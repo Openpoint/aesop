@@ -3,6 +3,8 @@ aesop
 
 A web app to create multimedia stories
 
+![alt text](http://openpoint.ie/images/folio/aesop/aesop1.png "Aesop page")
+
 Pre ALPHA upload at moment - still busy building deployment strategy.
 
 Have a look at the demo: http://aesop.openpoint.ie
