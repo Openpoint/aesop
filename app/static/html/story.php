@@ -43,7 +43,7 @@ ini_set("error_log","../../log/aesop.log");
 		<div class='inner' ng-style="style.textframe">
 			<div class='story_in' ng-show='c.context.chid == -1'>
 				<h1>{{all.a.story.title}}</h1>
-				<p markdown-it='all.a.story.text'></p>
+				<div class = 'textouter' markdown-it='all.a.story.text'></div>
 			</div>
 			<div ng-show='c.context.pid == -1'>
 				<!--<div class='edit' ng-click='modal("c_tit")'>edit</div>-->
@@ -55,7 +55,7 @@ ini_set("error_log","../../log/aesop.log");
 				<!--<div class='edit' ng-click='modal("p_tit")' ng-show="all.a.chapter[c.context.c_order].page[c.context.p_order].menushow == 't'">edit</div>-->
 				<h1 ng-show="all.a.chapter[c.context.c_order].page[c.context.p_order].menushow == 't'">{{all.a.chapter[c.context.c_order].page[c.context.p_order].title}}</h1>
 				<!--<div class='edit' ng-click='modal("p_text")'>edit</div>-->
-				<p markdown-it='all.a.chapter[c.context.c_order].page[c.context.p_order].text'></p>
+				<div class = 'textouter' markdown-it='all.a.chapter[c.context.c_order].page[c.context.p_order].text'></div>
 			</div>
 			<div id="textend"></div>
 		</div>
