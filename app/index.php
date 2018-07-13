@@ -39,7 +39,7 @@
 	
 	<title>Aesop | Create a story</title>
 	<base href="/">
-	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="static/css/normalize.css"/>
 	<link rel="stylesheet" href="static/css/fontello.css"/>
 	<link rel="stylesheet" href="static/css/app.css"/>
