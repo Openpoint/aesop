@@ -1,6 +1,5 @@
 if(!aesop) var aesop={};
-var outer = document.createElement('div');
-
+var busy = false;
 aesop.make = function(loc,size,title,sum,image,url){
 	
 	size==='small'?size={w:'300px',h:'160px'}:size={w:'940px',h:'528px'};
@@ -8,7 +7,7 @@ aesop.make = function(loc,size,title,sum,image,url){
 	var widget = document.createElement('div');
 	var iframe = document .createElement('iframe');
 	var closer = document .createElement('div');
-	
+	var outer = document.createElement('div');
 	
 	var img = document .createElement('img');
 	var text = document.createElement('div');
@@ -127,7 +126,8 @@ aesop.make = function(loc,size,title,sum,image,url){
 	
 	loc.parentElement.insertBefore(widget,loc);
 }
-aesop.open = function(iframe,outer,closer,source,widget){	
+aesop.open = function(iframe,outer,closer,source,widget){
+	if(busy) return;
 	aesop.overflow = document.body.style.overflow;
 	document.body.style.overflow = 'hidden';
 	widget.className = 'aesop aesop_widget open';
@@ -135,9 +135,9 @@ aesop.open = function(iframe,outer,closer,source,widget){
 	outer.style.width = size.w;
 	outer.style.height = size.h;
 	outer.style.position="fixed";
-	outer.style.opacity=1;
-	
-	iframe.src = source;	
+	outer.style.opacity=1;	
+	iframe.src = source;
+	busy = true;
 }
 aesop.close=function(iframe,outer,closer,widget){
 	document.body.style.overflow = aesop.overflow;
@@ -147,7 +147,8 @@ aesop.close=function(iframe,outer,closer,widget){
 	outer.style.height = 0;
 	setTimeout(function(){
 		iframe.src='about:blank';
-		outer.style.position="absolute";		
+		outer.style.position="absolute";
+		busy = false;		
 	},2000)
 }
 
@@ -158,7 +159,9 @@ function getSize(){
 	}
 }
 window.addEventListener("resize",()=>{
+	if(!busy) return;
 	var size = getSize();
-	outer.style.width = size.w;
-	outer.style.height = size.h;
+	var _outer = document.getElementById("_outer");
+	_outer.style.width = size.w;
+	_outer.style.height = size.h;
 })
