@@ -1,4 +1,5 @@
 if(!aesop) var aesop={};
+var outer = document.createElement('div');
 
 aesop.make = function(loc,size,title,sum,image,url){
 	
@@ -7,13 +8,13 @@ aesop.make = function(loc,size,title,sum,image,url){
 	var widget = document.createElement('div');
 	var iframe = document .createElement('iframe');
 	var closer = document .createElement('div');
-	var outer = document .createElement('div');
+	
+	
 	var img = document .createElement('img');
 	var text = document.createElement('div');
 	var tit = document.createElement('div');
 	var enter = document.createElement('div');
 
-	
 	img.src = url+"static/resources/timage/"+image;
 	img.style.width = '100%';
 	img.style.height = 'auto';
@@ -79,6 +80,7 @@ aesop.make = function(loc,size,title,sum,image,url){
 	outer.style.transition = "width 2s, height 2s, opacity 2s"
 	outer.style.zIndex = 9999;
 	outer.className = 'aesop aesop_outer';
+	outer.id = "_outer";
 	
 	widget.style.width=size.w;
 	widget.style.height=size.h;
@@ -129,14 +131,12 @@ aesop.open = function(iframe,outer,closer,source,widget){
 	aesop.overflow = document.body.style.overflow;
 	document.body.style.overflow = 'hidden';
 	widget.className = 'aesop aesop_widget open';
-	var w = window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
-	var h= window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;
-	w+='px';
-	h+='px';
+	var size = getSize();
+	outer.style.width = size.w;
+	outer.style.height = size.h;
 	outer.style.position="fixed";
 	outer.style.opacity=1;
-	outer.style.width = w;
-	outer.style.height = h;
+	
 	iframe.src = source;	
 }
 aesop.close=function(iframe,outer,closer,widget){
@@ -150,3 +150,15 @@ aesop.close=function(iframe,outer,closer,widget){
 		outer.style.position="absolute";		
 	},2000)
 }
+
+function getSize(){
+	return {
+		w:(window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth) + "px",
+		h:(window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight) + "px"
+	}
+}
+window.addEventListener("resize",()=>{
+	var size = getSize();
+	outer.style.width = size.w;
+	outer.style.height = size.h;
+})

@@ -39,7 +39,6 @@ Aesop.service('getter',function($q,$http,$rootScope) {
 		storylist : function(){
 			var defer = $q.defer();
 			$http.post('handler.php', {'method':'getstories'}).then(function(data) {
-				console.log(data);
 				defer.resolve(data.data);
 			});
 			return defer.promise;
